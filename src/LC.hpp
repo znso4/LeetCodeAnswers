@@ -24,7 +24,7 @@ class Automaton {
 
     int get_col(char c) {
         if (isspace(c)) return 0;
-        if (c == '+' or c == '-') return 1;
+        if (c == '+' || c == '-') return 1;
         if (isdigit(c)) return 2;
         return 3;
     }
@@ -769,6 +769,25 @@ public:
         return ret;
     }
 	
+    // 740. 删除与获得点数
+    int deleteAndEarn(vector<int>& nums) {
+        if (nums.empty()) return 0;
+        map<int, int> t;
+        for (auto& i : nums) {
+            ++t[i];
+        }
+        vector<int> p(t.rbegin()->first + 1, 0);
+        for (auto& it : t) {
+            p[it.first] = it.first * it.second;
+        }
+        int m = 0, n = 0, k = 0;
+        for (int i = 0; i < p.size(); ++i) {
+            k = max(m + p[i], n);
+            m = n; n = k;
+        }
+        return n;
+    }
+
     //817. 链表组件
     int numComponents(ListNode* head, vector<int>& G) {
         unordered_set<int> S(G.begin(), G.end());
@@ -832,5 +851,45 @@ public:
         return ret;
     }
 	
+    //1139. 最大的以 1 为边界的正方形
+    int largest1BorderedSquare(vector<vector<int>>& grid) {
+        struct CP{
+            int up;
+            int left;
+            //CP():up(0),left(0){};
+            CP(int u, int l):up(u),left(l){};
+        };
+        vector<vector<CP>> t={{}};
+        t[0].emplace_back(grid[0][0], grid[0][0]);
+        for(int j=1;j<grid[0].size();++j){
+            t[0].emplace_back(grid[0][j], grid[0][j] + t[0][j-1].left);
+        }
+        for(int i=1;i<grid.size();++i){
+            t.emplace_back();
+            t[i].emplace_back(t[i-1][0].up + grid[i][0], grid[i][0]);
+            for(int j=1;j<grid[i].size();++j){
+                t[i].emplace_back(grid[i][j] + t[i-1][j].up, grid[i][j] + t[i][j-1].left);
+            }
+        }
+        int maxres = 0;
+        for(int i=0;i<t.size();++i){
+            for(int j=0; j<t[i].size();++j){
+                int res = maxres;
+                if(grid[i][j]){
+                    while(i+res<t.size() && j+res<t[i].size()){
+                        if(t[i][j+res].left - t[i][j].left == res &&
+                        t[i+res][j].up - t[i][j].up == res &&
+                        t[i+res][j+res].left - t[i+res][j].left == res &&
+                        t[i+res][j+res].up - t[i][j+res].up == res){
+                            ++res;
+                            maxres=max(maxres, res);
+                        }else{++res;}
+                    }
+                }
+            }
+        }
+        return maxres*maxres;
+    }
+
 };
 }
