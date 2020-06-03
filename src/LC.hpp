@@ -646,6 +646,18 @@ public:
 		return ((countBetween(l, l, nums) > 1) ? l : r);
 	}
 
+    // 343. 整数拆分
+    int integerBreak(int n) {
+        if(n<=3) return n/3+1;
+        int res = 1;
+        while(n>4){
+            n-=3;
+            res*=3;
+        }
+        res*=n;
+        return res;
+    }
+
     //365. 水壶问题
     bool canMeasureWater(int x, int y, int z) {
         if(x<0 || y<0 || z<0) return false;

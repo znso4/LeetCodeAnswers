@@ -136,6 +136,16 @@ public:
         return minArray(numbers, 0, numbers.size()-1);
     }
 
-    
+    // 面试题14- I. 剪绳子
+    int cuttingRope(int n) {
+        if(n<=3) return n/3+1;
+        int res = 1;
+        while(n>4){
+            n-=3;
+            res*=3;
+        }
+        res*=n;
+        return res;
+    }    
 };
 }
