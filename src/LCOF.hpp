@@ -146,6 +146,69 @@ public:
         }
         res*=n;
         return res;
-    }    
+    }
+
+    // 面试题15. 二进制中1的个数
+    int hammingWeight(uint32_t n) {
+        int res = 0;
+        while(n){
+            n = n & (n-1);
+            ++res;
+        }
+        return res;
+    }
+
+    // 面试题16. 数值的整数次方
+    double myPow(double x, long n) {
+        if(n<0){
+            x=1.0/x;
+            n=-n;
+        }
+        double res = 1;
+        while(n){
+            if(n&1) res*=x;
+            x*=x;
+            n>>=1;
+        }
+        return res;
+    }
+
+    // 面试题17. 打印从1到最大的n位数
+    vector<int> printNumbers(int n) {
+        int ten = 1;
+        while(n){
+            ten*=10;
+            --n;
+        }
+        vector<int> res;
+        while(++n<ten){
+            res.emplace_back(n);
+        }
+        return res;
+    }
+
+    // 面试题18. 删除链表的节点
+    ListNode* deleteNode(ListNode* head, int val) {
+        if(head && head->val == val){
+            auto tmp = head;
+            head=head->next;
+            tmp->next=nullptr;
+            return head;
+        }else if(!head){
+            return head;
+        }
+        auto pre = head;
+        auto cur = head->next;
+        while(cur && cur->val != val){
+            pre = cur;
+            cur = cur->next;
+        }
+        if(cur){
+            pre->next = cur->next;
+            cur->next = nullptr;
+        }
+        return head;
+    }
+
 };
 }
