@@ -210,5 +210,48 @@ public:
         return head;
     }
 
+    // 面试题20. 表示数值的字符串
+    private:
+    class DFA{
+        vector<vector<int>> transfer_mat;
+        int status;
+    public:
+        DFA(vector<vector<int>> t):transfer_mat(t), status(0){}
+        int get_status(){return status;}
+        int update(int k){
+            status = transfer_mat[status][k];
+            return status;
+        }
+    };
+    const unordered_map<char, int> d = {
+        {' ', 0},
+        {'+', 1},{'-', 1},
+        {'0', 2},{'1', 2},{'2', 2},{'3', 2},{'4', 2},{'5', 2},{'6', 2},{'7', 2},{'8', 2},{'9', 2},
+        {'.', 3},{'e', 4},
+    };
+    const vector<vector<int>> mat = {
+        {0,1,2,9,-1},
+        {-1,-1,2,9,-1},
+        {8,-1,2,3,5},
+        {8,-1,4,-1,5},
+        {8,-1,4,-1,5},
+        {-1,6,7,-1,-1},
+        {-1,-1,7,-1,-1},
+        {8,-1,7,-1,-1},
+        {8,-1,-1,-1,-1,},
+        {-1,-1,4,-1,-1},
+    };
+    const unordered_set<int> allowed_status = {2,3,4,7,8};
+    public:
+    bool isNumber(string s) {
+        DFA dfa(mat);
+        for(auto& c : s){
+            auto f = d.find(c);
+            if(f==d.end() || dfa.update(f->second)<0){
+                return false;
+            }
+        }
+        return allowed_status.count(dfa.get_status());
+    }
 };
 }
