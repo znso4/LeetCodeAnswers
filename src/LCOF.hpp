@@ -281,11 +281,46 @@ public:
     vector<int> exchange(vector<int>& nums) {
         int i = -1;
         for(int j=0; j<nums.size(); ++j){
-            if(nums[j]%2==1){
+            if(nums[j]%2){
                 swap(nums[++i], nums[j]);
             }
         }
         return nums;
     }
+
+    // 面试题22. 链表中倒数第k个节点
+    int lengthOfList(ListNode* target) {
+        int ret = 0;
+        while (target != nullptr) {
+            target = target->next;
+            ++ret;
+        }
+        return ret;
+    }
+    ListNode* getKthFromEnd(ListNode* head, int k) {
+        int l = lengthOfList(head);
+        if(k>l){
+            return nullptr;
+        }else{
+            while(l>k){
+                head = head->next;
+                --l;
+            }
+            return head;
+        }
+    }
+
+    // 面试题24. 反转链表(递归)
+    ListNode* reverseList(ListNode* head) {
+        if(!head || !(head->next)){ return head;}
+        else{
+            ListNode* cur = reverseList(head->next);
+            head->next->next = head;
+            head->next = nullptr;
+            return cur;
+        }
+    }
+    
+
 };
 }

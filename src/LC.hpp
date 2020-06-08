@@ -627,7 +627,25 @@ public:
 		}
 	}
 
-	//287. 寻找重复数
+	// 206. 反转链表(循环)
+    ListNode* reverseList(ListNode* head) {
+        ListNode* res = head;
+        if(!head){
+            return nullptr;
+        }
+        head=head->next;
+        res->next = nullptr;
+        ListNode* t = nullptr;
+        while(head){
+            t=head->next;
+            head->next=res;
+            res=head;
+            head=t;
+        }
+        return res;
+    }
+    
+    //287. 寻找重复数
 	int countBetween(const int& l, const int& r, const vector<int>& a) const {
 		int ret = 0;
 		for (int i = 0; i < a.size(); ++i) {
