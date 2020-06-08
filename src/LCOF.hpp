@@ -210,40 +210,63 @@ public:
         return head;
     }
 
-    // 面试题20. 表示数值的字符串
-    private:
-    class DFA{
-        vector<vector<int>> transfer_mat;
-        int status;
-    public:
-        DFA(vector<vector<int>> t):transfer_mat(t), status(0){}
-        int get_status(){return status;}
-        int update(int k){
-            status = transfer_mat[status][k];
-            return status;
+    // 面试题19. 正则表达式匹配
+    bool isMatch(string& s, int i, string& p, int j){
+        if(i==0 && j%2==0){
+            for(int k = 1;k<j;k+=2){
+                if(p[k]!='*') return false;
+            }
+            return true;
+        }else if( (i==0 && j%2!=0) || j==0){
+            return false;
+        }else{
+            switch(p[j-1]){
+            case '.': return isMatch(s, i-1, p, j-1);
+            case '*': 
+                if(p[j-2]=='.' || p[j-2]==s[i-1]) return ( isMatch(s, i-1, p, j) || isMatch(s, i, p, j-2) );
+                else return isMatch(s, i, p, j-2);
+            default:
+                if(p[j-1]==s[i-1]) return isMatch(s, i-1, p, j-1);
+                else return false;
+            }
         }
-    };
-    const unordered_map<char, int> d = {
-        {' ', 0},
-        {'+', 1},{'-', 1},
-        {'0', 2},{'1', 2},{'2', 2},{'3', 2},{'4', 2},{'5', 2},{'6', 2},{'7', 2},{'8', 2},{'9', 2},
-        {'.', 3},{'e', 4},
-    };
-    const vector<vector<int>> mat = {
-        {0,1,2,9,-1},
-        {-1,-1,2,9,-1},
-        {8,-1,2,3,5},
-        {8,-1,4,-1,5},
-        {8,-1,4,-1,5},
-        {-1,6,7,-1,-1},
-        {-1,-1,7,-1,-1},
-        {8,-1,7,-1,-1},
-        {8,-1,-1,-1,-1,},
-        {-1,-1,4,-1,-1},
-    };
-    const unordered_set<int> allowed_status = {2,3,4,7,8};
-    public:
+    }
+    bool isMatch(string s, string p) {
+        return isMatch(s, s.size(), p, p.size());
+    }
+
+    // 面试题20. 表示数值的字符串
     bool isNumber(string s) {
+        class DFA{
+            vector<vector<int>> transfer_mat;
+            int status;
+        public:
+            DFA(vector<vector<int>> t):transfer_mat(t), status(0){}
+            int get_status(){return status;}
+            int update(int k){
+                status = transfer_mat[status][k];
+                return status;
+            }
+        };
+        const unordered_map<char, int> d = {
+            {' ', 0},
+            {'+', 1},{'-', 1},
+            {'0', 2},{'1', 2},{'2', 2},{'3', 2},{'4', 2},{'5', 2},{'6', 2},{'7', 2},{'8', 2},{'9', 2},
+            {'.', 3},{'e', 4},
+        };
+        const vector<vector<int>> mat = {
+            {0,1,2,9,-1},
+            {-1,-1,2,9,-1},
+            {8,-1,2,3,5},
+            {8,-1,4,-1,5},
+            {8,-1,4,-1,5},
+            {-1,6,7,-1,-1},
+            {-1,-1,7,-1,-1},
+            {8,-1,7,-1,-1},
+            {8,-1,-1,-1,-1,},
+            {-1,-1,4,-1,-1},
+        };
+        const unordered_set<int> allowed_status = {2,3,4,7,8};
         DFA dfa(mat);
         for(auto& c : s){
             auto f = d.find(c);
@@ -252,6 +275,17 @@ public:
             }
         }
         return allowed_status.count(dfa.get_status());
+    }
+
+    // 面试题21. 调整数组顺序使奇数位于偶数前面
+    vector<int> exchange(vector<int>& nums) {
+        int i = -1;
+        for(int j=0; j<nums.size(); ++j){
+            if(nums[j]%2==1){
+                swap(nums[++i], nums[j]);
+            }
+        }
+        return nums;
     }
 };
 }
