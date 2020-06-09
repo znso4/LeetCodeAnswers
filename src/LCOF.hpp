@@ -9,7 +9,7 @@ namespace LCOF{
 struct ListNode {
     int val;
     ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
+    ListNode(int x) : val(x), next(nullptr) {}
 };
 
 struct TreeNode {
@@ -321,6 +321,58 @@ public:
         }
     }
     
+    // 面试题25. 合并两个排序的链表
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1==nullptr){
+            return l2;
+        }else if(l2==nullptr){
+            return l1;
+        }else{
+            if(l1->val > l2->val){
+                swap(l1, l2);
+            }
+            ListNode* cur = l1;
+            l1=l1->next;
+            cur->next = mergeTwoLists(l1, l2);
+            return cur;
+        }
+    }
+
+    // 面试题27. 二叉树的镜像
+    TreeNode* mirrorTree(TreeNode* root) {
+        vector<TreeNode*> st;
+        if(root) st.push_back(root);
+        TreeNode* node = root;
+        TreeNode* temp = nullptr;
+        while(!st.empty()){
+            root = st.back();
+            st.pop_back();
+            if(root->left) st.push_back(root->left);
+            if(root->right) st.push_back(root->right);
+            temp = root->left;
+            root->left = root->right;
+            root->right = temp;
+        }
+        return node;
+    }
+
+    // 面试题28. 对称的二叉树
+    bool isSymmetric(TreeNode* L, TreeNode* R){
+        if(L==nullptr && R==nullptr){
+            return true;
+        }else if(L!=nullptr && R!=nullptr){
+            return (L->val==R->val) && isSymmetric(L->left, R->right) && isSymmetric(L->right, R->left);
+        }else{
+            return false;
+        }
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(root){
+            return isSymmetric(root->left, root->right);
+        }else{
+            return true;
+        }
+    }
 
 };
 }

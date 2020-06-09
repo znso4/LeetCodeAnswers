@@ -60,7 +60,6 @@ public:
         int comp;
         for (int i = 0; i < nums.size();++i) {
             comp = target - nums[i];
-            auto f = n.find(comp);
             if (n.find(comp) != n.end()) {
                 return { n[comp], i };
             }
@@ -323,19 +322,15 @@ public:
     ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
         ListNode* ret = new ListNode(0);
         ListNode* temp = ret;
-        while (l1 != nullptr && l2 != nullptr) {
-            if (l1->val <= l2->val) {
-                temp->next = l1;
-                l1 = l1->next;
+        while (l1 && l2) {
+            if (l1->val > l2->val) {
+                swap(l1, l2);
             }
-            else {
-                temp->next = l2;
-                l2 = l2->next;
-            }
+            temp->next = l1;
+            l1 = l1->next;
             temp = temp->next;
         }
-        if (l1 != nullptr) temp->next = l1;
-        else temp->next = l2;
+        temp->next = l1?l1:l2;
         temp = ret;
         ret = ret->next;
         delete temp;
@@ -572,6 +567,34 @@ public:
         return t[n];
     }
     
+    // 101. 对称二叉树
+    bool isSymmetric(TreeNode* root) {
+        if(root==nullptr) return true;
+        TreeNode* L = root->left;
+        TreeNode* R = root->right;
+        if(L==nullptr && R==nullptr){
+            return true;
+        }else if(!(L!=nullptr && R!=nullptr && L->val == R->val)){
+            return false;
+        }
+        vector<TreeNode*> lst;
+        vector<TreeNode*> rst;
+        lst.push_back(L);
+        rst.push_back(R);
+        while(!lst.empty() && !rst.empty()){
+            L = lst.back();lst.pop_back();
+            R = rst.back();rst.pop_back();
+            if(L->val != R->val) return false;
+            if(L->left && R->right){
+                lst.push_back(L->left);rst.push_back(R->right);
+            }else if(!(L->left==R->right && L->left==nullptr)) return false;
+            if(L->right && R->left){
+                lst.push_back(L->right);rst.push_back(R->left);
+            }else if(!(L->right==R->left && L->right==nullptr)) return false;
+        }
+        return (lst.empty() && rst.empty());
+    }
+
 	// 104. 二叉树的最大深度
 	int maxDepth(TreeNode* root) {
 		if (root == nullptr) {
@@ -645,6 +668,16 @@ public:
         return res;
     }
     
+    // 226. 翻转二叉树
+    TreeNode* invertTree(TreeNode* root) {
+        if(root){
+            TreeNode* temp = invertTree(root->right);
+            root->right = invertTree(root->left);
+            root->left = temp;
+        }
+        return root;
+    }
+
     //287. 寻找重复数
 	int countBetween(const int& l, const int& r, const vector<int>& a) const {
 		int ret = 0;
