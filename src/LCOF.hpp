@@ -89,7 +89,7 @@ public:
         }
     }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        int sz = preorder.size();
+        int sz = static_cast<int>(preorder.size());
         if(!(sz==inorder.size() && sz>0)){
             return nullptr;
         }else{
@@ -105,7 +105,7 @@ public:
     // 面试题10- I. 斐波那契数列
     vector<int> FIB = {0, 1};
     int fib(int N) {
-        for (int i = FIB.size(); i <= N; ++i) {
+        for (int i = static_cast<int>(FIB.size()); i <= N; ++i) {
             FIB.push_back((FIB[i - 2] + FIB[i - 1])%1000000007);
         }
         return FIB[N];
@@ -133,7 +133,7 @@ public:
     int minArray(vector<int>& numbers) {
         if(numbers.empty()) return -1;
         if(numbers[0]<numbers.back()) return numbers[0];
-        return minArray(numbers, 0, numbers.size()-1);
+        return minArray(numbers, 0, static_cast<int>(numbers.size()-1));
     }
 
     // 面试题14- I. 剪绳子
@@ -211,7 +211,7 @@ public:
     }
 
     // 面试题19. 正则表达式匹配
-    bool isMatch(string& s, int i, string& p, int j){
+    bool isMatch(string& s, size_t i, string& p, size_t j){
         if(i==0 && j%2==0){
             for(int k = 1;k<j;k+=2){
                 if(p[k]!='*') return false;

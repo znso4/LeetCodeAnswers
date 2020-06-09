@@ -32,9 +32,9 @@ int binarySearch(vector<T>& nums, T target) {
 }
 
 //509. 斐波那契数
-int fib(int N) {
-    static vector<int> FIB = { 0,1 };
-    for (int i = FIB.size(); i <= N; ++i) {
+size_t fib(size_t N) {
+    static vector<size_t> FIB = { 0,1 };
+    for (size_t i = FIB.size(); i <= N; ++i) {
         FIB.push_back(FIB[i - 2] + FIB[i - 1]);
     }
     return FIB[N];

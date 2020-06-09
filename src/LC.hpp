@@ -104,7 +104,8 @@ public:
     
     //3. 无重复字符的最长子串
     int lengthOfLongestSubstring(string s) {
-        int result = 0, j = 0, n = s.size();
+        int result = 0, j = 0;
+        auto n = s.size();
         bitset<128> hst = { false };
         for (int i = 0; i < n; ++i) {
             if (i != 0) hst[s[i - 1]] = false;
@@ -161,7 +162,7 @@ public:
         Automaton automaton;
         for (char c : str)
             automaton.get(c);
-        return automaton.sign * automaton.ans;
+        return static_cast<int>(automaton.sign * automaton.ans);
     }
     
     //9. 回文数
@@ -809,8 +810,8 @@ public:
     
     //542. 01 矩阵
     vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
-        int n = matrix.size();
-        int m = matrix[0].size();
+        int n = static_cast<int>(matrix.size());
+        int m = static_cast<int>(matrix[0].size());
         vector<vector<int>> ret(n, vector<int>(m, INT_MAX / 2));
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
@@ -871,7 +872,7 @@ public:
         int ret = 0;
         constexpr int blen = 80000;
         int B[blen] = {0};
-        int alen=A.size();
+        int alen=static_cast<int>(A.size());
         for(int i = 0; i<alen; ++i){
             ++B[A[i]];
         }
