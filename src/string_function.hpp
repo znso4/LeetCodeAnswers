@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "pch.h"
+﻿#include "pch.h"
+#pragma once
 using std::string;
 using std::regex;
 using std::vector;

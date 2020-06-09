@@ -1,6 +1,6 @@
-﻿#pragma once
-#include "pch.h"
+﻿#include "pch.h"
 #include "algs.hpp"
+#pragma once
 
 using namespace std;
 
@@ -105,11 +105,11 @@ public:
     // 面试题10- I. 斐波那契数列
     vector<int> FIB = {0, 1};
     int fib(int N) {
-		for (int i = FIB.size(); i <= N; ++i) {
-			FIB.push_back((FIB[i - 2] + FIB[i - 1])%1000000007);
-		}
-		return FIB[N];
-	}
+        for (int i = FIB.size(); i <= N; ++i) {
+            FIB.push_back((FIB[i - 2] + FIB[i - 1])%1000000007);
+        }
+        return FIB[N];
+    }
 
     // 面试题10- II. 青蛙跳台阶问题
     const int base = 1000000007;

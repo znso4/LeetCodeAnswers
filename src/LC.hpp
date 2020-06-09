@@ -1,6 +1,6 @@
-﻿#pragma once
-#include "pch.h"
+﻿#include "pch.h"
 #include "algs.hpp"
+#pragma once
 
 using namespace std;
 
@@ -101,28 +101,28 @@ public:
         delete n;
         return ret;
     }
-	
-	//3. 无重复字符的最长子串
-	int lengthOfLongestSubstring(string s) {
-		int result = 0, j = 0, n = s.size();
-		bitset<128> hst = { false };
-		for (int i = 0; i < n; ++i) {
-			if (i != 0) hst[s[i - 1]] = false;
-			while (j < n && !hst[s[j]]) {
-				hst[s[j++]] = true;
-			}
-			if (result < j - i) result = j - i;
-		}
-		return result;
-	}
+    
+    //3. 无重复字符的最长子串
+    int lengthOfLongestSubstring(string s) {
+        int result = 0, j = 0, n = s.size();
+        bitset<128> hst = { false };
+        for (int i = 0; i < n; ++i) {
+            if (i != 0) hst[s[i - 1]] = false;
+            while (j < n && !hst[s[j]]) {
+                hst[s[j++]] = true;
+            }
+            if (result < j - i) result = j - i;
+        }
+        return result;
+    }
 
-	// TODO:4. 寻找两个正序数组的中位数
-	/*
-	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-		int d1 = (nums1.size() - 1) / 2;
-		int d2 = (nums2.size() - 1) / 2;
+    // TODO:4. 寻找两个正序数组的中位数
+    /*
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int d1 = (nums1.size() - 1) / 2;
+        int d2 = (nums2.size() - 1) / 2;
 
-	}*/
+    }*/
 
     //5. 最长回文子串
     int expand(string& s, int left, int right) {
@@ -136,7 +136,7 @@ public:
         int start = 0, maxlen = 0;
         for (int i = 0; i < s.size(); ++i) {
             int len = max(expand(s, i, i), expand(s, i, i + 1));
-			if (maxlen < len) {
+            if (maxlen < len) {
                 maxlen = len;
                 start = i - (len - 1) / 2;
             }
@@ -171,64 +171,64 @@ public:
         return s1==s2;
     }
 
-	//11. 盛最多水的容器
-	int maxArea(vector<int>& height) {
-		int ret = 0;
-		int i = 0;
-		int j = static_cast<int>(height.size()) - 1;
-		while (i != j) {
-			if (height[i] > height[j]) {
-				ret = max(ret, (j - i) * height[j]);
-				--j;
-			}
-			else {
-				ret = max(ret, (j - i) * height[j]);
-				++i;
-			}
-		}
-		return ret;
-	}
+    //11. 盛最多水的容器
+    int maxArea(vector<int>& height) {
+        int ret = 0;
+        int i = 0;
+        int j = static_cast<int>(height.size()) - 1;
+        while (i != j) {
+            if (height[i] > height[j]) {
+                ret = max(ret, (j - i) * height[j]);
+                --j;
+            }
+            else {
+                ret = max(ret, (j - i) * height[j]);
+                ++i;
+            }
+        }
+        return ret;
+    }
 
-	//12. 整数转罗马数字
-	string intToRoman(int num) {
-		const pair<int, string> table[] = { {1000, "M"},
-			{900, "CM"},{500,"D"}, {400, "CD"}, {100, "C"},
-			{90,"XC"},{50,"L"}, {40, "XL"},{10,"X"},
-			{9,"IX"},{5,"V"},{4,"IV"},{1,"I"}
-		};
-		string ret;
-		int i = 0;
-		while (num > 0 && num <= 3999) {
-			if (num >= table[i].first) {
-				num -= table[i].first;
-				ret += table[i].second;
-			}
-			else {
-				++i;
-			}
-		}
-		return ret;
-	}
+    //12. 整数转罗马数字
+    string intToRoman(int num) {
+        const pair<int, string> table[] = { {1000, "M"},
+            {900, "CM"},{500,"D"}, {400, "CD"}, {100, "C"},
+            {90,"XC"},{50,"L"}, {40, "XL"},{10,"X"},
+            {9,"IX"},{5,"V"},{4,"IV"},{1,"I"}
+        };
+        string ret;
+        int i = 0;
+        while (num > 0 && num <= 3999) {
+            if (num >= table[i].first) {
+                num -= table[i].first;
+                ret += table[i].second;
+            }
+            else {
+                ++i;
+            }
+        }
+        return ret;
+    }
 
-	//13. 罗马数字转整数
-	int romanToInt(string s) {
-		const pair<int, string> table[] = { {1000, "M"},
-			{900, "CM"},{500,"D"}, {400, "CD"}, {100, "C"},
-			{90,"XC"},{50,"L"}, {40, "XL"},{10,"X"},
-			{9,"IX"},{5,"V"},{4,"IV"},{1,"I"}
-		};
-		int ret = 0;
-		for (int i = 0; i < 13; ++i) {
-			string t = table[i].second;
-			while (t == s.substr(0, t.size())) {
-				ret += table[i].first;
-				s = s.substr(t.size());
-			}
-		}
-		return ret;
-	}
+    //13. 罗马数字转整数
+    int romanToInt(string s) {
+        const pair<int, string> table[] = { {1000, "M"},
+            {900, "CM"},{500,"D"}, {400, "CD"}, {100, "C"},
+            {90,"XC"},{50,"L"}, {40, "XL"},{10,"X"},
+            {9,"IX"},{5,"V"},{4,"IV"},{1,"I"}
+        };
+        int ret = 0;
+        for (int i = 0; i < 13; ++i) {
+            string t = table[i].second;
+            while (t == s.substr(0, t.size())) {
+                ret += table[i].first;
+                s = s.substr(t.size());
+            }
+        }
+        return ret;
+    }
 
-	//14. 最长公共前缀
+    //14. 最长公共前缀
     string longestCommonPrefix(vector<string>& strs) {
         if (strs.size() == 0) return "";
         string tmp = strs[0];
@@ -363,31 +363,31 @@ public:
         return i+1;
     }
 
-	//28. 实现 strStr()
-	int strStr(string haystack, string needle) {
-		if (needle.empty()) return 0;
-		for (int i = 0; i <= static_cast<int>(haystack.size()) - static_cast<int>(needle.size()); ++i) {
-			int j = 0;
-			while (j < needle.size()) {
-				if (haystack[i] == needle[j]) {
-					++i; ++j;
-				}
-				else {
-					break;
-				}
-			}
-			if (j == needle.size()) {
-				return i - j;
-			}
-			else {
-				i -= j;
-				continue;
-			}
-		}
-		return -1;
-	}
+    //28. 实现 strStr()
+    int strStr(string haystack, string needle) {
+        if (needle.empty()) return 0;
+        for (int i = 0; i <= static_cast<int>(haystack.size()) - static_cast<int>(needle.size()); ++i) {
+            int j = 0;
+            while (j < needle.size()) {
+                if (haystack[i] == needle[j]) {
+                    ++i; ++j;
+                }
+                else {
+                    break;
+                }
+            }
+            if (j == needle.size()) {
+                return i - j;
+            }
+            else {
+                i -= j;
+                continue;
+            }
+        }
+        return -1;
+    }
 
-	//33. 搜索旋转排序数组
+    //33. 搜索旋转排序数组
     int maxIndex(vector<int>& nums) {
         if (nums[0] <= nums.back()) return static_cast<int>(nums.size()) - 1;
         int l = 0, r = static_cast<int>(nums.size()) - 1;
@@ -424,23 +424,23 @@ public:
         }
     }
 
-	//43. 字符串相乘
-	string multiply(string num1, string num2) {
-		if (num1 == "0" || num2 == "0") return "0";
-		string result(num1.size() + num2.size(), 0);
-		for (int i = static_cast<int>(num1.size()) - 1; i >= 0; --i) {
-			for (int j = static_cast<int>(num2.size()) - 1; j >= 0; --j) {
-				result[i + j + 1] += (num1[i] - '0') * (num2[j] - '0');
-				result[i + j] += result[i + j + 1] / 10;
-				result[i + j + 1] %= 10;
-			}
-		}
-		if (!result[0]) result.erase(0, 1);
-		for_each(result.begin(), result.end(), [](char& c) {c += '0'; });
-		return result;
-	}
+    //43. 字符串相乘
+    string multiply(string num1, string num2) {
+        if (num1 == "0" || num2 == "0") return "0";
+        string result(num1.size() + num2.size(), 0);
+        for (int i = static_cast<int>(num1.size()) - 1; i >= 0; --i) {
+            for (int j = static_cast<int>(num2.size()) - 1; j >= 0; --j) {
+                result[i + j + 1] += (num1[i] - '0') * (num2[j] - '0');
+                result[i + j] += result[i + j + 1] / 10;
+                result[i + j + 1] %= 10;
+            }
+        }
+        if (!result[0]) result.erase(0, 1);
+        for_each(result.begin(), result.end(), [](char& c) {c += '0'; });
+        return result;
+    }
 
-	//46. 全排列
+    //46. 全排列
     vector<vector<int>> permute(vector<int>& nums) {
         vector<vector<int>> ret;
         do {
@@ -479,25 +479,25 @@ public:
         return ans;
     }
 
-	//56. 合并区间
-	vector<vector<int>> merge(vector<vector<int>>& intervals) {
-		if (intervals.empty()) return {};
-		sort(intervals.begin(), intervals.end());
-		vector<vector<int>> ret{ intervals[0] };
-		int i = 1, j = 0;
-		for (; i < intervals.size(); ++i) {
-			if (ret[j][1] >= intervals[i][0]) {
-				ret[j][1] = max(intervals[i][1], ret[j][1]);
-			}
-			else {
-				ret.push_back(intervals[i]);
-				++j;
-			}
-		}
-		return ret;
-	}
+    //56. 合并区间
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        if (intervals.empty()) return {};
+        sort(intervals.begin(), intervals.end());
+        vector<vector<int>> ret{ intervals[0] };
+        int i = 1, j = 0;
+        for (; i < intervals.size(); ++i) {
+            if (ret[j][1] >= intervals[i][0]) {
+                ret[j][1] = max(intervals[i][1], ret[j][1]);
+            }
+            else {
+                ret.push_back(intervals[i]);
+                ++j;
+            }
+        }
+        return ret;
+    }
 
-	//59. 螺旋矩阵 II
+    //59. 螺旋矩阵 II
     vector<vector<int>> generateMatrix(int n) {
         if (n == 0) return{};
         vector<vector<int>> ans(n, vector<int>(n, -1));
@@ -595,15 +595,15 @@ public:
         return (lst.empty() && rst.empty());
     }
 
-	// 104. 二叉树的最大深度
-	int maxDepth(TreeNode* root) {
-		if (root == nullptr) {
-			return 0;
-		}
-		else {
-			return max(maxDepth(root->left), maxDepth(root->right)) + 1;
-		}
-	}
+    // 104. 二叉树的最大深度
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        else {
+            return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+        }
+    }
 
     // TODO: 151. 翻转字符串里的单词
     // string reverseWords(string s) {
@@ -639,18 +639,18 @@ public:
         }
         return t.back();
     }
-	
+    
     //283. 移动零
-	void moveZeroes(vector<int>& nums) {
-		int i = -1;
-		for (int j = 0; j < nums.size(); ++j) {
-			if (nums[j] != 0) {
-				swap(nums[++i], nums[j]);
-			}
-		}
-	}
+    void moveZeroes(vector<int>& nums) {
+        int i = -1;
+        for (int j = 0; j < nums.size(); ++j) {
+            if (nums[j] != 0) {
+                swap(nums[++i], nums[j]);
+            }
+        }
+    }
 
-	// 206. 反转链表(循环)
+    // 206. 反转链表(循环)
     ListNode* reverseList(ListNode* head) {
         ListNode* res = head;
         if(!head){
@@ -679,23 +679,23 @@ public:
     }
 
     //287. 寻找重复数
-	int countBetween(const int& l, const int& r, const vector<int>& a) const {
-		int ret = 0;
-		for (int i = 0; i < a.size(); ++i) {
-			if (l <= a[i] && a[i] <= r) {
-				++ret;
-			}
-		}
-		return ret;
-	}
-	int findDuplicate(vector<int>& nums) {
-		int l = 1, r = static_cast<int>(nums.size()) - 1, m = r / 2;
-		while (l < m) {
-			(countBetween(l, m, nums) > (m - l + 1)) ? (r = m) : (l = m);
-			m = (l + r) / 2;
-		}
-		return ((countBetween(l, l, nums) > 1) ? l : r);
-	}
+    int countBetween(const int& l, const int& r, const vector<int>& a) const {
+        int ret = 0;
+        for (int i = 0; i < a.size(); ++i) {
+            if (l <= a[i] && a[i] <= r) {
+                ++ret;
+            }
+        }
+        return ret;
+    }
+    int findDuplicate(vector<int>& nums) {
+        int l = 1, r = static_cast<int>(nums.size()) - 1, m = r / 2;
+        while (l < m) {
+            (countBetween(l, m, nums) > (m - l + 1)) ? (r = m) : (l = m);
+            m = (l + r) / 2;
+        }
+        return ((countBetween(l, l, nums) > 1) ? l : r);
+    }
 
     // 343. 整数拆分
     int integerBreak(int n) {
@@ -724,23 +724,23 @@ public:
     }
     
     //415. 字符串相加
-	string addStrings(const string& num1, const string& num2) {
-		string result = "";
-		char sum = 0;
-		char carry = 0;
-		int i = static_cast<int>(num1.size()), j = static_cast<int>(num2.size());
-		while (i > 0 || j > 0) {
-			sum = 0;
-			if (i > 0) sum += num1[--i] - '0';
-			if (j > 0) sum += num2[--j] - '0';
-			sum += carry;
-			carry = sum / 10;
-			sum %= 10;
-			result += (sum + '0');
-		}
-		if (carry)result += (carry + '0');
-		return string(result.rbegin(), result.rend());
-	}
+    string addStrings(const string& num1, const string& num2) {
+        string result = "";
+        char sum = 0;
+        char carry = 0;
+        int i = static_cast<int>(num1.size()), j = static_cast<int>(num2.size());
+        while (i > 0 || j > 0) {
+            sum = 0;
+            if (i > 0) sum += num1[--i] - '0';
+            if (j > 0) sum += num2[--j] - '0';
+            sum += carry;
+            carry = sum / 10;
+            sum %= 10;
+            result += (sum + '0');
+        }
+        if (carry)result += (carry + '0');
+        return string(result.rbegin(), result.rend());
+    }
 
     //445. 两数相加 II(正向链表)
     ListNode* reverseAdd(ListNode* l, ListNode* r) {
@@ -786,7 +786,7 @@ public:
     ListNode* addTwoNumbers_forwardList(ListNode* l1, ListNode* l2) {
         return handleCarry(reverseAdd(l1, l2));
     }
-	
+    
     //475. 供暖器
     int findRadius(vector<int>& houses, vector<int>& heaters) {
         sort(houses.begin(), houses.end());
@@ -831,7 +831,7 @@ public:
         }
         return ret;
     }
-	
+    
     // 740. 删除与获得点数
     int deleteAndEarn(vector<int>& nums) {
         if (nums.empty()) return 0;
@@ -886,17 +886,17 @@ public:
     }
     
     //1010. 总持续时间可被 60 整除的歌曲
-	int numPairsDivisibleBy60(vector<int>& time) {
-		int t[60] = { 0 };
-		for_each(time.begin(), time.end(), [&t](int x) {++t[x % 60]; });
-		int result = 0;
-		if (t[0]) result += (t[0] * (t[0] - 1) / 2);
-		if (t[30]) result += (t[30] * (t[30] - 1) / 2);
-		for (int i = 1; i < 30; ++i) {
-			result += t[i] * t[60 - i];
-		}
-		return result;
-	}
+    int numPairsDivisibleBy60(vector<int>& time) {
+        int t[60] = { 0 };
+        for_each(time.begin(), time.end(), [&t](int x) {++t[x % 60]; });
+        int result = 0;
+        if (t[0]) result += (t[0] * (t[0] - 1) / 2);
+        if (t[30]) result += (t[30] * (t[30] - 1) / 2);
+        for (int i = 1; i < 30; ++i) {
+            result += t[i] * t[60 - i];
+        }
+        return result;
+    }
     
     //1111. 有效括号的嵌套深度
     vector<int> maxDepthAfterSplit(string seq) {
@@ -913,7 +913,7 @@ public:
         }
         return ret;
     }
-	
+    
     //1139. 最大的以 1 为边界的正方形
     int largest1BorderedSquare(vector<vector<int>>& grid) {
         struct CP{

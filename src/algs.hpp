@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "pch.h"
+﻿#include "pch.h"
+#pragma once
 
 using std::vector;
 using std::size_t;
@@ -40,6 +40,7 @@ int fib(int N) {
     return FIB[N];
 }
 
+// 最大公约数
 int gcd(int a, int b){
     int c = b%a;
     while(c!=0){
@@ -50,6 +51,7 @@ int gcd(int a, int b){
     return a;
 }
 
+// 阶乘
 typedef unsigned long long uint64;
 uint64 factor(size_t x, size_t base = 0){
     const static size_t BASE = base;
