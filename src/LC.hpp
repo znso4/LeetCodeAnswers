@@ -568,7 +568,7 @@ public:
         return t[n];
     }
     
-    // 101. 对称二叉树
+    // 101. 对称二叉树(循环)
     bool isSymmetric(TreeNode* root) {
         if(root==nullptr) return true;
         TreeNode* L = root->left;
@@ -669,7 +669,7 @@ public:
         return res;
     }
     
-    // 226. 翻转二叉树
+    // 226. 翻转二叉树(递归)
     TreeNode* invertTree(TreeNode* root) {
         if(root){
             TreeNode* temp = invertTree(root->right);

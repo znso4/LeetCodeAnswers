@@ -338,7 +338,17 @@ public:
         }
     }
 
-    // 面试题27. 二叉树的镜像
+    // 面试题26. 树的子结构(递归)
+    bool equalTrees(TreeNode* x, TreeNode* y){
+        return ((x->val == y->val) &&
+        (y->left==nullptr || (x->left && equalTrees(x->left, y->left))) &&
+        (y->right==nullptr || (x->right && equalTrees(x->right, y->right))));
+    }
+    bool isSubStructure(TreeNode* A, TreeNode* B) {
+        return (A&&B) && (equalTrees(A, B) || isSubStructure(A->left, B) || isSubStructure(A->right,B));
+    }
+
+    // 面试题27. 二叉树的镜像(循环)
     TreeNode* mirrorTree(TreeNode* root) {
         vector<TreeNode*> st;
         if(root) st.push_back(root);
@@ -356,7 +366,7 @@ public:
         return node;
     }
 
-    // 面试题28. 对称的二叉树
+    // 面试题28. 对称的二叉树(递归)
     bool isSymmetric(TreeNode* L, TreeNode* R){
         if(L==nullptr && R==nullptr){
             return true;
