@@ -19,6 +19,29 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
+// 面试题30. 包含min函数的栈
+class MinStack {
+    vector<int> s = {};
+    vector<int> m = {INT_MAX};
+public:
+    void push(int x) {
+        s.emplace_back(x);
+        if(x<=m.back()){
+            m.emplace_back(x);
+        }
+    }
+    void pop() {
+        if(!s.empty()){
+            if(s.back() == m.back()){
+                m.pop_back();
+            }
+            s.pop_back();
+        }
+    }
+    int top() {return s.back();}
+    int min() {return m.back();}
+};
+
 class Solution {
 public:
     // 面试题 01.07. 旋转矩阵
@@ -383,6 +406,41 @@ public:
             return true;
         }
     }
+
+    // 面试题29. 顺时针打印矩阵
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if(matrix.empty() || matrix[0].empty()) return {};
+        vector<int> res;
+        int ii = 0, ij = matrix.size()-1, ji = 0, jj = matrix[0].size()-1;
+        while(true){
+            if(ii<=ij){
+                for(int u = ji; u<=jj; ++u){
+                    res.emplace_back(matrix[ii][u]);
+                }
+                ++ii;
+            }else{break;}
+            if(ji<=jj){
+                for(int u = ii; u<=ij; ++u){
+                    res.emplace_back(matrix[u][jj]);
+                }
+                --jj;
+            }else{break;}
+            if(ii<=ij){
+                for(int u = jj; u>=ji; --u){
+                    res.emplace_back(matrix[ij][u]);
+                }
+                --ij;
+            }else{break;}
+            if(ji<=jj){
+                for(int u = ij; u>=ii; --u){
+                    res.emplace_back(matrix[u][ji]);
+                }
+                ++ji;
+            }else{break;}
+        }
+        return res;
+    }
+
 
 };
 }

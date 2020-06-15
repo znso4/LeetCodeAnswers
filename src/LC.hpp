@@ -231,24 +231,22 @@ public:
 
     //14. 最长公共前缀
     string longestCommonPrefix(vector<string>& strs) {
-        if (strs.size() == 0) return "";
-        string tmp = strs[0];
-        string ret = tmp;
-        int size = 0;
-        for (int i = 1; i < strs.size() && tmp != ""; ++i) {
-            ret = "";
-            size = static_cast<int>(min(tmp.size(), strs[i].size()));
-            for (int j = 0; j < size; ++j) {
-                if (tmp[j] == strs[i][j]) {
-                    ret += tmp[j];
-                }
-                else {
+        if(strs.size()==0) return "";
+        string& s = strs[0];
+        int p = s.size();
+        for(int i = 1;i<strs.size() && p>0;++i){
+            p = min(p, static_cast<int>(strs[i].size()));
+            int j = 0;
+            while(j < p){
+                if(s[j] == strs[i][j]){
+                    ++j;
+                }else{
                     break;
                 }
             }
-            tmp = ret;
+            p = j;
         }
-        return ret;
+        return string(s, 0, p);
     }
 
     //15. 三数之和
