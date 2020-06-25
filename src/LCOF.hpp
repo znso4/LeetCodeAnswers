@@ -19,7 +19,7 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
-// 面试题30. 包含min函数的栈
+// 剑指Offer 30. 包含min函数的栈
 class MinStack {
     vector<int> s = {};
     vector<int> m = {INT_MAX};
@@ -44,7 +44,7 @@ public:
 
 class Solution {
 public:
-    // 面试题 01.07. 旋转矩阵
+    // 剑指Offer  01.07. 旋转矩阵
     void rotate(vector<vector<int>>& matrix) {
         auto n = matrix.size();
         for (int i = 0; i < n; ++i) {
@@ -59,7 +59,7 @@ public:
         }
     }
     
-    // 面试题03. 数组中重复的数字
+    // 剑指Offer 03. 数组中重复的数字
     int findRepeatNumber(vector<int>& nums) {
         bitset<100000> t = {false};
         for(auto& k : nums){
@@ -72,7 +72,7 @@ public:
         return -1;
     }
 
-    // 面试题05. 替换空格
+    // 剑指Offer 05. 替换空格
     string replaceSpace(string s) {
         string result;
         for(auto& c:s){
@@ -85,7 +85,7 @@ public:
         return result;
     }
 
-    // 面试题06. 从尾到头打印链表
+    // 剑指Offer 06. 从尾到头打印链表
     vector<int> reversePrint(ListNode* head) {
         vector<int> result;
         while(head!=nullptr){
@@ -96,7 +96,7 @@ public:
         return result;
     }
 
-    // 面试题07. 重建二叉树
+    // 剑指Offer 07. 重建二叉树
     TreeNode* buildTree(vector<int>& pre, int l1, int r1, 
     vector<int>& ino, int l2, int r2, unordered_map<int, int> m){
         if(l1>r1){
@@ -125,7 +125,7 @@ public:
         }
     }
 
-    // 面试题10- I. 斐波那契数列
+    // 剑指Offer 10- I. 斐波那契数列
     vector<int> FIB = {0, 1};
     int fib(int N) {
         for (int i = static_cast<int>(FIB.size()); i <= N; ++i) {
@@ -134,13 +134,13 @@ public:
         return FIB[N];
     }
 
-    // 面试题10- II. 青蛙跳台阶问题
+    // 剑指Offer 10- II. 青蛙跳台阶问题
     const int base = 1000000007;
     int numWays(int n) {
         return fib(n+1);
     }
 
-    // 面试题11. 旋转数组的最小数字
+    // 剑指Offer 11. 旋转数组的最小数字
     int minArray(vector<int>& numbers, int l, int r){
         int mid = (l+r)/2;
         if(mid == l){
@@ -159,7 +159,7 @@ public:
         return minArray(numbers, 0, static_cast<int>(numbers.size()-1));
     }
 
-    // 面试题14- I. 剪绳子
+    // 剑指Offer 14- I. 剪绳子
     int cuttingRope(int n) {
         if(n<=3) return n/3+1;
         int res = 1;
@@ -171,7 +171,7 @@ public:
         return res;
     }
 
-    // 面试题15. 二进制中1的个数
+    // 剑指Offer 15. 二进制中1的个数
     int hammingWeight(uint32_t n) {
         int res = 0;
         while(n){
@@ -181,7 +181,7 @@ public:
         return res;
     }
 
-    // 面试题16. 数值的整数次方
+    // 剑指Offer 16. 数值的整数次方
     double myPow(double x, long n) {
         if(n<0){
             x=1.0/x;
@@ -196,7 +196,7 @@ public:
         return res;
     }
 
-    // 面试题17. 打印从1到最大的n位数
+    // 剑指Offer 17. 打印从1到最大的n位数
     vector<int> printNumbers(int n) {
         int ten = 1;
         while(n){
@@ -210,7 +210,7 @@ public:
         return res;
     }
 
-    // 面试题18. 删除链表的节点
+    // 剑指Offer 18. 删除链表的节点
     ListNode* deleteNode(ListNode* head, int val) {
         if(head && head->val == val){
             auto tmp = head;
@@ -233,7 +233,7 @@ public:
         return head;
     }
 
-    // 面试题19. 正则表达式匹配
+    // 剑指Offer 19. 正则表达式匹配
     bool isMatch(string& s, size_t i, string& p, size_t j){
         if(i==0 && j%2==0){
             for(int k = 1;k<j;k+=2){
@@ -258,7 +258,7 @@ public:
         return isMatch(s, s.size(), p, p.size());
     }
 
-    // 面试题20. 表示数值的字符串
+    // 剑指Offer 20. 表示数值的字符串
     bool isNumber(string s) {
         class DFA{
             vector<vector<int>> transfer_mat;
@@ -300,7 +300,7 @@ public:
         return allowed_status.count(dfa.get_status());
     }
 
-    // 面试题21. 调整数组顺序使奇数位于偶数前面
+    // 剑指Offer 21. 调整数组顺序使奇数位于偶数前面
     vector<int> exchange(vector<int>& nums) {
         int i = -1;
         for(int j=0; j<nums.size(); ++j){
@@ -311,7 +311,7 @@ public:
         return nums;
     }
 
-    // 面试题22. 链表中倒数第k个节点
+    // 剑指Offer 22. 链表中倒数第k个节点
     int lengthOfList(ListNode* target) {
         int ret = 0;
         while (target != nullptr) {
@@ -333,7 +333,7 @@ public:
         }
     }
 
-    // 面试题24. 反转链表(递归)
+    // 剑指Offer 24. 反转链表(递归)
     ListNode* reverseList(ListNode* head) {
         if(!head || !(head->next)){ return head;}
         else{
@@ -344,7 +344,7 @@ public:
         }
     }
     
-    // 面试题25. 合并两个排序的链表
+    // 剑指Offer 25. 合并两个排序的链表
     ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
         if(l1==nullptr){
             return l2;
@@ -361,7 +361,7 @@ public:
         }
     }
 
-    // 面试题26. 树的子结构(递归)
+    // 剑指Offer 26. 树的子结构(递归)
     bool equalTrees(TreeNode* x, TreeNode* y){
         return ((x->val == y->val) &&
         (y->left==nullptr || (x->left && equalTrees(x->left, y->left))) &&
@@ -371,7 +371,7 @@ public:
         return (A&&B) && (equalTrees(A, B) || isSubStructure(A->left, B) || isSubStructure(A->right,B));
     }
 
-    // 面试题27. 二叉树的镜像(循环)
+    // 剑指Offer 27. 二叉树的镜像(循环)
     TreeNode* mirrorTree(TreeNode* root) {
         vector<TreeNode*> st;
         if(root) st.push_back(root);
@@ -389,7 +389,7 @@ public:
         return node;
     }
 
-    // 面试题28. 对称的二叉树(递归)
+    // 剑指Offer 28. 对称的二叉树(递归)
     bool isSymmetric(TreeNode* L, TreeNode* R){
         if(L==nullptr && R==nullptr){
             return true;
@@ -407,7 +407,7 @@ public:
         }
     }
 
-    // 面试题29. 顺时针打印矩阵
+    // 剑指Offer 29. 顺时针打印矩阵
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
         if(matrix.empty() || matrix[0].empty()) return {};
         vector<int> res;
@@ -439,6 +439,19 @@ public:
             }else{break;}
         }
         return res;
+    }
+
+    // 剑指 Offer 31. 栈的压入、弹出序列
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        size_t j = 0;
+        vector<int> s;
+        for(size_t i = 0; i<pushed.size(); ++i){
+            s.emplace_back(pushed[i]);
+            while(!s.empty() && j < popped.size() && s.back() == popped[j]){
+                s.pop_back();++j;
+            }
+        }
+        return (s.empty() && j == popped.size());
     }
 
 
