@@ -72,6 +72,37 @@ public:
         return -1;
     }
 
+    // 剑指 Offer 04. 二维数组中的查找
+    bool baseFind2DArray(vector<vector<int>>& m, int nl, int nr, int ml, int mr, int target){
+        if(nl>nr || ml>mr){
+            return false;
+        }else if(nl==nr && ml==mr){
+            return target==m[nl][ml];
+        }
+        int nm=nl+(nr-nl)/2, mm=ml+(mr-ml)/2;
+        if(target == m[nm][mm]){
+            return true;
+        }else{
+            if(target < m[nm][mm]){
+                return ( baseFind2DArray(m, nl, nm, ml, mm, target) ||
+                baseFind2DArray(m, nm+1, nr, ml, mm, target) ||
+                baseFind2DArray(m, nl, nm, ml+1, mr, target) );
+            }else{
+                return ( baseFind2DArray(m, nm+1, nr, mm+1, mr, target) ||
+                baseFind2DArray(m, nm+1, nr, ml, mm, target) ||
+                baseFind2DArray(m, nl, nm, ml+1, mr, target) );
+            }
+
+        }
+    }
+    bool findNumberIn2DArray(vector<vector<int>>& matrix, int target) {
+        if(!matrix.empty() && !matrix[0].empty()){
+            return baseFind2DArray(matrix, 0, matrix.size()-1, 0, matrix[0].size()-1, target);
+        }else{
+            return false;
+        }
+    }
+
     // 剑指Offer 05. 替换空格
     string replaceSpace(string s) {
         string result;
@@ -158,6 +189,47 @@ public:
         if(numbers[0]<numbers.back()) return numbers[0];
         return minArray(numbers, 0, static_cast<int>(numbers.size()-1));
     }
+
+    // 剑指 Offer 12. 矩阵中的路径
+    bool dfs(vector<vector<char>>& board, string& word, int i, int j, int k){
+        if(i<0||i>=board.size() || j<0||j>=board[0].size() || board[i][j] != word[k]) return false;
+        if(++k == word.size()) return true;
+        char tmp = board[i][j];
+        board[i][j] = '$';
+        bool res = (dfs(board, word, i, j+1, k) || dfs(board, word, i+1, j, k) || dfs(board, word, i, j-1, k) || dfs(board, word, i-1, j, k));
+        board[i][j] = tmp;
+        return res;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        for(size_t ii = 0; ii <= board.size(); ++ii){
+            for (size_t jj = 0; jj < board[0].size(); jj++){
+                if(dfs(board, word, ii, jj, 0)) return true;
+            }
+        }
+        return false;
+    }
+    /*用递归lambda函数的方法，比较慢
+    bool exist(vector<vector<char>>& board, string word) {
+        auto n = board.size()-1;
+        auto m = board[0].size()-1;
+        auto l = word.size()-1;
+        function<bool (int, int, int)> dfs = [&](int i, int j, int k)->bool{
+            if(i<0||i>n || j<0||j>m || board[i][j] != word[k]) return false;
+            if(k == l) return true;
+            char tmp = board[i][j];
+            board[i][j] = '$';
+            ++k;
+            bool res = (dfs(i, j+1, k) || dfs(i+1, j, k) || dfs(i, j-1, k) || dfs(i-1, j, k));
+            board[i][j] = tmp;
+            return res;
+        };
+        for(size_t ii = 0; ii <= board.size(); ++ii){
+            for (size_t jj = 0; jj < board[0].size(); jj++){
+                if(dfs(ii, jj, 0)) return true;
+            }
+        }
+        return false;
+    }*/
 
     // 剑指Offer 14- I. 剪绳子
     int cuttingRope(int n) {
