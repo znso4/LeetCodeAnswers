@@ -238,6 +238,28 @@ public:
         return res;
     }
     int movingCount(int m, int n, int k) {
+        //动态规划解法
+        vector<vector<char>> board(m, vector<char>(n, 0));
+        int ans = 0;
+        for(int i = 0; i < m; ++i){
+            if(digitalSum(i) <= k){
+                board[i][0] = 1; ++ans;
+            }else{break;}
+        }
+        for(int i = 1; i < n; ++i){
+            if(digitalSum(i) <= k){
+                board[0][i] = 1; ++ans;
+            }else{break;}
+        }
+        for(int i = 1; i < m; ++i){
+            for(int j = 1; j < n; ++j){
+                if(board[i-1][j] + board[i][j-1] && digitalSum(i) + digitalSum(j) <= k){
+                    board[i][j] = 1; ++ans;
+                }
+            }
+        }
+        return ans;
+        /*广度优先搜索（BFS）解法
         if (!k) return 1;
         queue<pair<int,int>> q;
         int dx[2] = {1, 0};
@@ -247,7 +269,8 @@ public:
         board[0][0] = 1;
         int ans = 1;
         while (!q.empty()) {
-            auto [x, y] = q.front();
+            int x = q.front().first;
+            int y = q.front().second;
             q.pop();
             for (int i = 0; i < 2; ++i) {
                 int tx = dx[i] + x;
@@ -259,6 +282,7 @@ public:
             }
         }
         return ans;
+        */
     }
 
     // 剑指Offer 14- I. 剪绳子
@@ -556,6 +580,105 @@ public:
         return (s.empty() && j == popped.size());
     }
 
+    // 剑指 Offer 32 - I. 从上到下打印二叉树
+    vector<int> levelOrder(TreeNode* root) {
+        vector<int> ans;
+        queue<TreeNode*> q;
+        if(root) q.push(root);
+        TreeNode* cur = nullptr;
+        while(!q.empty()){
+            cur = q.front();
+            q.pop();
+            ans.emplace_back(cur->val);
+            if(cur->left) q.push(cur->left);
+            if(cur->right) q.push(cur->right);
+        }
+        return ans;
+    }
 
+    // 剑指 Offer 32 - II. 从上到下打印二叉树 II
+    vector<vector<int>> levelOrder2(TreeNode* root) {
+        vector<vector<int>> ans;
+        queue<TreeNode*> q;
+        if(root) q.push(root);
+        TreeNode* cur = nullptr;
+        int width;
+        while(!q.empty()){
+            width = q.size();
+            ans.push_back({});
+            for(int i = 0; i<width; ++i){
+                cur = q.front();
+                q.pop();
+                ans.back().emplace_back(cur->val);
+                if(cur->left) q.push(cur->left);
+                if(cur->right) q.push(cur->right);
+            }
+        }
+        return ans;
+    }
+
+    // 剑指 Offer 32 - III. 从上到下打印二叉树 III
+    vector<vector<int>> levelOrder3(TreeNode* root) {
+        vector<vector<int>> ans;
+        queue<TreeNode*> q;
+        if(root) q.push(root);
+        TreeNode* cur = nullptr;
+        int width;
+        while(!q.empty()){
+            width = q.size();
+            ans.push_back({});
+            for(int i = 0; i<width; ++i){
+                cur = q.front();
+                q.pop();
+                ans.back().emplace_back(cur->val);
+                if(cur->left) q.push(cur->left);
+                if(cur->right) q.push(cur->right);
+            }
+        }
+        for(int i = 0; i < ans.size(); ++i){
+            if(i%2){
+                reverse(ans[i].begin(), ans[i].end());
+            }
+        }
+        return ans;
+    }
+
+    //剑指 Offer 33. 二叉搜索树的后序遍历序列
+    bool verifyPostorder(vector<int>& postorder, int l, int r) {
+        if (l >= r)return true;
+        int i = l;
+        while (i < r && postorder[i] < postorder[r]) { ++i; }
+        int m = i;
+        while (i < r && postorder[i] > postorder[r]) { ++i; }
+        return i == r && verifyPostorder(postorder, l, m - 1) && verifyPostorder(postorder, m, r - 1);
+    }
+    bool verifyPostorder(vector<int>& postorder) {
+        return verifyPostorder(postorder, 0, postorder.size() - 1);
+    }
+    
+    // 剑指 Offer 34. 二叉树中和为某一值的路径
+    vector<vector<int>> pathSum(TreeNode* root, int target) {
+        vector<vector<int>> ans;
+        if(!root) return ans;
+        stack<TreeNode*> cur;
+        cur.push(root);
+        stack<char> st;
+        st.push(0);
+        int sum = root->val;
+        vector<int> temp = {sum};
+        while(!st.empty()){
+            TreeNode* l = cur.top()->left;
+            TreeNode* r = cur.top()->right;
+            if(st.top() == 0 && l){
+                st.top()=1;cur.push(l);st.push(0);temp.push_back(l->val);sum+=l->val;
+            }else if(st.top()!=2 && r){
+                st.top()=2;cur.push(r);st.push(0);temp.push_back(r->val);sum+=r->val;
+            }else{
+                if(st.top()==0 && sum==target) ans.push_back(temp);
+                sum-=temp.back();cur.pop(); st.pop();temp.pop_back();
+            }
+        }
+        return ans;
+    }
 };
 }
