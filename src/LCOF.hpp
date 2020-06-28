@@ -714,5 +714,29 @@ public:
         }
         return nhead;
     }
+
+    // 剑指 Offer 36. 二叉搜索树与双向链表
+    TreeNode* treeToDoublyList(TreeNode* root) {
+        if(!root) return root;
+        auto ans = root;
+        if(!root->left && !root->right){
+            root->left = root; root->right = root; return root;
+        }
+        if(root->left){
+            auto l = treeToDoublyList(root->left);
+            root->left = l->left;
+            l->left->right = root;
+            l->left = root;
+            ans = l;
+        }
+        if(root->right){
+            auto r = treeToDoublyList(root->right);
+            root->right = r;
+            r->left->right = ans;
+            ans->left = r->left;
+            r->left = root;
+        }else{root->right = ans;}
+        return ans;
+    }
 };
 }
