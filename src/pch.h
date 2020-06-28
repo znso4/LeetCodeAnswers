@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include<string>
 #include<vector>
+#include<queue>
 #include<deque>
 #include<stack>
 #include<bitset>
