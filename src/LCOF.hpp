@@ -231,6 +231,36 @@ public:
         return false;
     }*/
 
+    // 剑指 Offer 13. 机器人的运动范围
+    int digitalSum(int x){
+        int res = 0;
+        while(x){ res += x % 10; x /= 10;}
+        return res;
+    }
+    int movingCount(int m, int n, int k) {
+        if (!k) return 1;
+        queue<pair<int,int>> q;
+        int dx[2] = {1, 0};
+        int dy[2] = {0, 1};
+        vector<vector<char> > board(m, vector<char>(n, 0));
+        q.push(make_pair(0, 0));
+        board[0][0] = 1;
+        int ans = 1;
+        while (!q.empty()) {
+            auto [x, y] = q.front();
+            q.pop();
+            for (int i = 0; i < 2; ++i) {
+                int tx = dx[i] + x;
+                int ty = dy[i] + y;
+                if (tx >= m || ty >= n || board[tx][ty] || digitalSum(tx) + digitalSum(ty) > k) continue;
+                q.push(make_pair(tx, ty));
+                board[tx][ty] = 1;
+                ++ans;
+            }
+        }
+        return ans;
+    }
+
     // 剑指Offer 14- I. 剪绳子
     int cuttingRope(int n) {
         if(n<=3) return n/3+1;
