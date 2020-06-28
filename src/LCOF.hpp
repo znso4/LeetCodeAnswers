@@ -12,6 +12,19 @@ struct ListNode {
     ListNode(int x) : val(x), next(nullptr) {}
 };
 
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -679,6 +692,27 @@ public:
             }
         }
         return ans;
+    }
+
+    // 剑指 Offer 35. 复杂链表的复制
+    Node* copyRandomList(Node* head) {
+        if(!head) return head;
+        Node* nhead = new Node(head->val);
+        Node* cur = head, * ncur = nhead;
+        unordered_map<Node*, Node*> m;
+        m[cur] = ncur;
+        while(cur->next){
+            cur=cur->next;
+            ncur->next = new Node(cur->val);
+            ncur=ncur->next;
+            m[cur] = ncur;
+        }
+        cur = head;
+        while(cur){
+            if(cur->random) m[cur]->random = m[cur->random];
+            cur = cur->next;
+        }
+        return nhead;
     }
 };
 }
