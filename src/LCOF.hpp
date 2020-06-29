@@ -55,6 +55,59 @@ public:
     int min() {return m.back();}
 };
 
+// 剑指 Offer 37. 序列化二叉树
+class Codec {
+public:
+    string serialize(TreeNode* root) {
+        string ans = "[";
+        queue<TreeNode*> q;
+        q.push(root);
+        TreeNode* cur = nullptr;
+        while (!q.empty()) {
+            cur = q.front();
+            if (cur) {
+                ans.append(to_string(cur->val)+",");
+                q.push(cur->left); q.push(cur->right);
+            } else {
+                ans.append("null,");
+            }
+            q.pop();
+        }
+        ans.back() = ']';
+        return ans;
+    }
+    TreeNode* deserialize(string data) {
+        if(data.empty() || data.front() != '[' || data.back() != ']') return nullptr;
+        data.back() = ',';
+        auto h = data.cbegin(); ++h;
+        auto i = h;
+        for (; i != data.cend() && *i != ','; ++i);
+        string cur(h, i);
+        h = ++i;
+        if (i == data.cend() || cur == "null") return nullptr;
+        TreeNode* root = new TreeNode(stoi(cur));
+        queue<TreeNode*> q; q.push(root);
+        TreeNode* node = nullptr;
+        while (!q.empty() && h!=data.cend()) {
+            node = q.front();
+            q.pop();
+            for (; i != data.cend() && *i != ','; ++i);
+            cur.assign(h, i);
+            h = ++i;
+            if (cur != "null") {
+                node->left = new TreeNode(stoi(cur)); q.push(node->left);
+            }
+            for (; i != data.cend() && *i != ','; ++i);
+            cur.assign(h, i);
+            h = ++i;
+            if (cur != "null") {
+                node->right = new TreeNode(stoi(cur)); q.push(node->right);
+            }
+        }
+        return root;
+    }
+};
+
 class Solution {
 public:
     // 剑指Offer  01.07. 旋转矩阵
@@ -737,6 +790,75 @@ public:
             r->left = root;
         }else{root->right = ans;}
         return ans;
+    }
+    //剑指 Offer 38. 字符串的排列
+    vector<string> permutation(string s) {
+        vector<string> ans;
+        sort(s.begin(), s.end());
+        do {
+            ans.push_back(s);
+        }while (next_permutation(s.begin(), s.end()));
+        return ans;
+    }
+
+    //剑指 Offer 39. 数组中出现次数超过一半的数字
+    int majorityElement(vector<int>& nums) {
+        int ans;
+        int sum = 0;
+        for (auto& k : nums) {
+            if (sum == 0)ans = k;
+            (ans == k) ? (++sum) : (--sum);
+        }
+        return ans;
+    }
+    // 剑指 Offer 40. 最小的k个数
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        /*直接排序
+        sort(arr.begin(), arr.end());
+        return vector<int>(arr.begin(), arr.begin()+k);*/
+        if (arr.size() <= k){
+            return arr;
+        }
+        nth_element(arr.begin(), arr.begin() + k, arr.end());
+        arr.resize(k);
+        return arr;
+        /*容量为k的大顶堆
+        if(k<=0)return {};
+        priority_queue<int> q;
+        int i =0;
+        for(;i<k && i <arr.size();++i){
+            q.push(arr[i]);
+        }
+        for(;i<arr.size();++i){
+            if(q.top()>arr[i]){
+                q.pop();q.push(arr[i]);
+            }
+        }
+        vector<int> ans;
+        while(!q.empty()){ans.emplace_back(q.top());q.pop();}
+        return ans; */
+        /*快排扩展
+        if(k<=0) return {};
+        if(k>=arr.size())return arr;
+        int l = 0, r = arr.size();
+        int i = 0;
+        int pivot = arr[rand()%(r-l) + l];
+        while(true){
+            for(int j=l;j<r;++j){
+                if(arr[j]<pivot){
+                    swap(arr[i], arr[j]); ++i;
+                }
+            }
+            if(i == k){
+                return vector<int>(arr.begin(), arr.begin()+k);
+            }else if(i > k){
+                r = i;
+            }else{
+                l = i;
+            }
+            pivot = arr[rand()%(r-l) + l];
+            i = l;
+        }*/
     }
 };
 }
