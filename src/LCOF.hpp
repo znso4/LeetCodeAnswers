@@ -108,6 +108,36 @@ public:
     }
 };
 
+// 剑指 Offer 41. 数据流中的中位数
+class MedianFinder {
+    priority_queue<int> right;
+    priority_queue<int, vector<int>, greater<int>> left;
+public:
+    /** initialize your data structure here. */
+    
+    MedianFinder() {}
+    
+    void addNum(int num) {
+        if(left.size() < right.size()){
+            right.push(num);
+            left.push(right.top());
+            right.pop();
+        }else{
+            left.push(num);
+            right.push(left.top());
+            left.pop();
+        }
+    }
+    
+    double findMedian() {
+        if(left.size()!=right.size()){
+            return right.top();
+        }else{
+            return left.top()/2.0 + right.top()/2.0;
+        }
+    }
+};
+
 class Solution {
 public:
     // 剑指Offer  01.07. 旋转矩阵
@@ -860,5 +890,64 @@ public:
             i = l;
         }*/
     }
+
+    // 剑指 Offer 42. 连续子数组的最大和
+    int maxSubArray(vector<int>& nums) {
+        if (nums.empty()) return INT_MIN;
+        int dp = nums[0];
+        int ans = dp;
+        for (int i = 1; i < nums.size(); ++i) {
+            dp = max(0, dp) + nums[i];
+            ans = max(ans, dp);
+        }
+        return ans;
+    }
+
+    // 剑指 Offer 43. 1～n整数中1出现的次数
+    int countDigitOne(int n) {
+        long long digit = 1;
+        int high = n / 10;
+        int cur = n % 10;
+        int low = 0;
+        int ans = 0;
+        while(high != 0 || cur != 0){
+            if(cur == 0){
+                ans += high * digit;
+            }else if (cur == 1){
+                ans += high * digit + low + 1;
+            }else{
+                ans += (high + 1) * digit;
+            }
+            low += cur * digit;
+            cur = high % 10;
+            high /= 10;
+            digit *= 10;
+        }
+        return ans;
+    }
+    
+    // 剑指 Offer 44. 数字序列中某一位的数字
+    int findNthDigit(int n) {
+        long long digit = 1;
+        int len = 1;
+        long long sum = 0;
+        while(sum < n){
+            sum += 9 * digit * len;
+            digit *= 10;
+            ++len;
+        }
+        --len;
+        long long a = sum - n;
+        int c = a%len;
+        int here = digit-1-a/len;
+        int ans = 0;
+        while(c>=0){
+            ans = here%10;
+            here/=10;
+            --c;
+        }
+        return ans;
+    }
+
 };
 }
