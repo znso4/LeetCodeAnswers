@@ -841,6 +841,7 @@ public:
         }
         return ans;
     }
+
     // 剑指 Offer 40. 最小的k个数
     vector<int> getLeastNumbers(vector<int>& arr, int k) {
         /*直接排序
@@ -949,5 +950,18 @@ public:
         return ans;
     }
 
+    // 剑指 Offer 45. 把数组排成最小的数
+    string minNumber(vector<int>& nums) {
+        sort(nums.begin(), nums.end(), [](int a, int b) -> bool {
+            string sa = to_string(a);
+            string sb = to_string(b);
+            return (sa + sb) < (sb + sa);
+        });
+        string ans;
+        for(auto& k : nums){
+            ans.append(to_string(k));
+        }
+        return ans;
+    }
 };
 }
