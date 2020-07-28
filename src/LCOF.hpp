@@ -963,5 +963,23 @@ public:
         }
         return ans;
     }
+
+    // 剑指 Offer 46. 把数字翻译成字符串
+    int translateNum(int num) {
+        int temp = num;
+        int len = 0;
+        while(temp){
+            temp/=10; ++len;
+        }
+        vector<int> tab(len+1, 0);
+        tab[0] = 1;
+        for(int i = 1; i < len; ++i, num /= 10){
+            tab[i] += tab[i-1];
+            tab[i+1] += tab[i-1] * (num%100 < 26 && num%100 > 9);
+        }
+        if(len) tab[len] += tab[len-1];
+        return tab[len];
+    }
+
 };
 }
