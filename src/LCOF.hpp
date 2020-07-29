@@ -981,5 +981,22 @@ public:
         return tab[len];
     }
 
+    // 剑指 Offer 47. 礼物的最大价值
+    int maxValue(vector<vector<int>>& grid) {
+        if(grid.empty() || grid[0].empty()) return 0;
+        vector<int> ans;
+        ans.assign(grid[0].begin(), grid[0].end());
+        for(int i = 1; i < ans.size(); ++i){
+            ans[i] += ans[i-1];
+        }
+        for(int i = 1; i < grid.size(); ++i){
+            ans[0] += grid[i][0];
+            for(int j = 1; j < ans.size(); ++j){
+                ans[j] = max(ans[j-1], ans[j]) + grid[i][j];
+            }
+        }
+        return ans.back();
+    }
+
 };
 }
