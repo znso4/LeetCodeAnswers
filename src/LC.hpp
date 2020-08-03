@@ -651,20 +651,15 @@ public:
 
     // 206. 反转链表(循环)
     ListNode* reverseList(ListNode* head) {
-        ListNode* res = head;
-        if(!head){
-            return nullptr;
-        }
-        head=head->next;
-        res->next = nullptr;
-        ListNode* t = nullptr;
+        ListNode* p = nullptr;
+        ListNode* q = nullptr;
         while(head){
-            t=head->next;
-            head->next=res;
-            res=head;
-            head=t;
+            q = head->next;
+            head->next = p;
+            p = head;
+            head = q;
         }
-        return res;
+        return p;
     }
     
     // 226. 翻转二叉树(递归)
