@@ -552,6 +552,15 @@ public:
         return static_cast<int>(result);
     }
 
+    // 70. 爬楼梯
+    int climbStairs(int n) {
+        static vector<int> t = {1, 2};
+        for(auto i = t.size(); i < n; ++i){
+            t.emplace_back(t[i-2] + t[i-1]);
+        }
+        return t[n-1];
+    }
+
     // 96. 不同的二叉搜索树
     int numTrees(int n) {
         vector<int> t = {1,1};
@@ -781,6 +790,29 @@ public:
         return handleCarry(reverseAdd(l1, l2));
     }
     
+    // 469. 凸多边形
+    int signof(int i){
+        if(i>0) return 1;
+        else if (i<0) return -1;
+        else return 0;
+    }
+    bool isConvex(vector<vector<int>>& points) {
+        auto n = points.size();
+        int res = 0;
+        for(auto i = 0; i < n; ++i){
+            int x1 = points[(i+1)%n][0] - points[i][0];
+            int x2 = points[(i+2)%n][0] - points[i][0];
+            int y1 = points[(i+1)%n][1] - points[i][1];
+            int y2 = points[(i+2)%n][1] - points[i][1];
+            int pro = x1*y2 - x2*y1;
+            if(pro != 0){
+                if(res * pro < 0) return false;
+                else res = signof(pro);
+            }
+        }
+        return true;
+    }
+
     //475. 供暖器
     int findRadius(vector<int>& houses, vector<int>& heaters) {
         sort(houses.begin(), houses.end());
@@ -859,7 +891,28 @@ public:
         }
         return result;
     }
-    
+
+    // 869. 重新排序得到 2 的幂
+    bool reorderedPowerOf2(int N) {
+        if(N <= 0) return false;
+        string s = to_string(N);
+        sort(s.begin(), s.end());
+        int factor = 1;
+        for(int i = 0; i < 32; ++i){
+            string s_factor = to_string(factor);
+            if(s.length() == s_factor.length()){
+                sort(s_factor.begin(), s_factor.end());
+                if(s == s_factor){
+                    return true;
+                }
+            }else if(s.length() < s_factor.length()){
+                break;
+            }
+            factor <<= 1;
+        }
+        return false;
+    }
+
     //945. 使数组唯一的最小增量
     int minIncrementForUnique(vector<int>& A) {
         int ret = 0;
@@ -879,6 +932,32 @@ public:
         return ret;
     }
     
+    // 984. 不含 AAA 或 BBB 的字符串
+    string strWithout3a3b(int A, int B) {
+        string res;
+        while(A > 0 && B > 0){
+            if(A>B){
+                res.append("aab");
+                A-=2; --B;
+            }else if(A == B){
+                res.append("ab");
+                --A; --B;
+            }else{
+                res.append("abb");
+                --A; B-=2;
+            }
+        }
+        if(A){
+            string tmp(A, 'a');
+            res.append(tmp);
+            return res;
+        }else{
+            string tmp(B, 'b');
+            tmp.append(res);
+            return tmp;
+        }
+    }
+
     //1010. 总持续时间可被 60 整除的歌曲
     int numPairsDivisibleBy60(vector<int>& time) {
         int t[60] = { 0 };
