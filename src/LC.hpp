@@ -612,6 +612,24 @@ public:
             return max(maxDepth(root->left), maxDepth(root->right)) + 1;
         }
     }
+    
+    // 110. 平衡二叉树
+    int isBalanced_aux(TreeNode* root){
+        if(root){
+            int l = isBalanced_aux(root->left);
+            int r = isBalanced_aux(root->right);
+            if(l==-1 || r==-1 || l-r<-1 || l-r>1){
+                return -1;
+            }else{
+                return max(l, r)+1;
+            }
+        }else{
+            return 0;
+        }
+    }
+    bool isBalanced(TreeNode* root) {
+        return (isBalanced_aux(root)>=0);
+    }
 
     // TODO: 151. 翻转字符串里的单词
     // string reverseWords(string s) {
