@@ -998,5 +998,32 @@ public:
         return ans.back();
     }
 
+    // 剑指 Offer 51. 数组中的逆序对
+    void reversePairs_aux(vector<int>& v, int l, int r, int& total){
+        if(l < r){
+            int q = l + (r - l) / 2;
+            reversePairs_aux(v, l, q, total);
+            reversePairs_aux(v, q+1, r, total);
+            vector<int> a(v.begin() + l, v.begin() + q+1);
+            vector<int> b(v.begin() + q+1, v.begin() + r+1);
+            a.push_back(numeric_limits<int>::max());
+            b.push_back(numeric_limits<int>::max());
+            int i = 0, j = 0;
+            for(int k  = l; k <= r; ++k){
+                if(a[i] <= b[j]){
+                    v[k] = a[i]; ++i;
+                }else{
+                    v[k] = b[j]; ++j;
+                    total += (q-l+1-i);
+                }
+            }
+        }
+    }
+    int reversePairs(vector<int>& nums) {
+        int total = 0;
+        reversePairs_aux(nums, 0, nums.size()-1, total);
+        return total;
+    }
+
 };
 }
