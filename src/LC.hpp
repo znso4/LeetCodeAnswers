@@ -117,13 +117,54 @@ public:
         return result;
     }
 
-    // TODO:4. 寻找两个正序数组的中位数
-    /*
+    //4. 寻找两个正序数组的中位数
+    int getKthElement(const vector<int>& nums1, const vector<int>& nums2, int k) {
+        /* 主要思路：要找到第 k (k>1) 小的元素，那么就取 pivot1 = nums1[k/2-1] 和 pivot2 = nums2[k/2-1] 进行比较
+         * 这里的 "/" 表示整除
+         * nums1 中小于等于 pivot1 的元素有 nums1[0 .. k/2-2] 共计 k/2-1 个
+         * nums2 中小于等于 pivot2 的元素有 nums2[0 .. k/2-2] 共计 k/2-1 个
+         * 取 pivot = min(pivot1, pivot2)，两个数组中小于等于 pivot 的元素共计不会超过 (k/2-1) + (k/2-1) <= k-2 个
+         * 这样 pivot 本身最大也只能是第 k-1 小的元素
+         * 如果 pivot = pivot1，那么 nums1[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums1 数组
+         * 如果 pivot = pivot2，那么 nums2[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums2 数组
+         * 由于我们 "删除" 了一些元素（这些元素都比第 k 小的元素要小），因此需要修改 k 的值，减去删除的数的个数
+         */
+        int m = nums1.size();
+        int n = nums2.size();
+        int index1 = 0, index2 = 0;
+        while (true) {
+            // 边界情况
+            if (index1 >= m) {
+                return nums2[index2 + k - 1];
+            }
+            if (index2 >= n) {
+                return nums1[index1 + k - 1];
+            }
+            if (k == 1) {
+                return min(nums1[index1], nums2[index2]);
+            }
+            // 正常情况
+            int newIndex1 = min(index1 + k / 2 - 1, m - 1);
+            int newIndex2 = min(index2 + k / 2 - 1, n - 1);
+            int pivot1 = nums1[newIndex1];
+            int pivot2 = nums2[newIndex2];
+            if (pivot1 <= pivot2) {
+                k -= newIndex1 - index1 + 1;
+                index1 = newIndex1 + 1;
+            }else {
+                k -= newIndex2 - index2 + 1;
+                index2 = newIndex2 + 1;
+            }
+        }
+    }
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        int d1 = (nums1.size() - 1) / 2;
-        int d2 = (nums2.size() - 1) / 2;
-
-    }*/
+        int totalLength = nums1.size() + nums2.size();
+        if (totalLength % 2 == 1) {
+            return getKthElement(nums1, nums2, (totalLength + 1) / 2);
+        }else{
+            return (getKthElement(nums1, nums2, totalLength / 2) + getKthElement(nums1, nums2, totalLength / 2 + 1)) / 2.0;
+        }
+    }
 
     //5. 最长回文子串
     int expand(string& s, int left, int right) {
@@ -631,6 +672,22 @@ public:
         return (isBalanced_aux(root)>=0);
     }
 
+    // 141. 环形链表
+    bool hasCycle(ListNode *head) {
+        ListNode* fh = head;
+        while(head && fh){
+            head = head->next;
+            fh = fh->next;
+            if(fh){
+                fh = fh->next;
+            }else{
+                break;
+            }
+            if(head == fh) return true;
+        }
+        return false;
+    }
+
     // TODO: 151. 翻转字符串里的单词
     // string reverseWords(string s) {
     //     string ret;
@@ -666,14 +723,15 @@ public:
         return t.back();
     }
     
-    //283. 移动零
-    void moveZeroes(vector<int>& nums) {
-        int i = -1;
-        for (int j = 0; j < nums.size(); ++j) {
-            if (nums[j] != 0) {
-                swap(nums[++i], nums[j]);
-            }
+    // 201. 数字范围按位与
+    int rangeBitwiseAnd(int m, int n) {
+        int cnt = 0;
+        while(m != n){
+            m=m>>1;
+            n=n>>1;
+            ++cnt;
         }
+        return m<<cnt;
     }
 
     // 206. 反转链表(循环)
@@ -697,6 +755,16 @@ public:
             root->left = temp;
         }
         return root;
+    }
+    
+    //283. 移动零
+    void moveZeroes(vector<int>& nums) {
+        int i = -1;
+        for (int j = 0; j < nums.size(); ++j) {
+            if (nums[j] != 0) {
+                swap(nums[++i], nums[j]);
+            }
+        }
     }
 
     //287. 寻找重复数
@@ -744,6 +812,46 @@ public:
         }
     }
     
+    // 394. 字符串解码
+    int decodeString_aux(string& s, int& k){
+        string res;
+        while(s[k] >= '0' && s[k] <= '9'){
+            res += s[k];
+            ++k;
+        }
+        if(res.length()){
+            return stoi(res);
+        }else{
+            return -1;
+        }
+    }
+    string decodeString(string s) {
+        vector<int> n;
+        string str;
+        int k = 0;
+        while(k<s.length()){
+            if(s[k] >= '0' && s[k] <= '9'){
+                int n_tmp = decodeString_aux(s, k);
+                if(n_tmp > 0){
+                    n.push_back(n_tmp);
+                }
+            }else if((s[k] >= 'a' && s[k] <= 'z') || s[k] == '['){
+                str += s[k];
+            }else if(s[k] == ']'){
+                auto h = str.find_last_of('[');
+                string str_tmp(str.begin() + h + 1, str.end());
+                str.erase(str.begin() + h, str.end());
+                while(n.back()){
+                    str.append(str_tmp);
+                    --n.back();
+                }
+                n.pop_back();
+            }
+            ++k;
+        }
+        return str;
+    }
+
     //415. 字符串相加
     string addStrings(const string& num1, const string& num2) {
         string result = "";
@@ -929,6 +1037,21 @@ public:
             factor <<= 1;
         }
         return false;
+    }
+
+    // 887. 鸡蛋掉落
+    int superEggDrop(int K, int N) {
+        vector<vector<int>> tb;
+        vector<int> line(K, 1);
+        int t = 1;
+        while(t < N && line.back() < N){
+            tb.push_back(line);
+            line[0] = ++t;
+            for(int i = 1; i < K; ++i){
+                line[i] = tb.back()[i] + tb.back()[i-1] + 1;
+            }
+        }
+        return t;
     }
 
     //945. 使数组唯一的最小增量
