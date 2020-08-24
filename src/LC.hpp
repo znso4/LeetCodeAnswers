@@ -757,6 +757,22 @@ public:
         return root;
     }
     
+    // 264. 丑数 II
+    int nthUglyNumber(int n) {
+        vector<int> dp(n);
+        dp[0] = 1;
+        int a = 0, b=0, c=0;
+        int n2,n3,n5;
+        for(int i = 1; i < n; ++i){
+            n2=dp[a]*2, n3=dp[b]*3, n5=dp[c]*5;
+            dp[i] = min(min(n2,n3), n5);
+            if(dp[i] == n2) ++a;
+            if(dp[i] == n3) ++b;
+            if(dp[i] == n5) ++c;
+        }
+        return dp.back();
+    }
+
     //283. 移动零
     void moveZeroes(vector<int>& nums) {
         int i = -1;

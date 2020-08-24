@@ -998,6 +998,53 @@ public:
         return ans.back();
     }
 
+    // 剑指 Offer 48. 最长不含重复字符的子字符串
+    int lengthOfLongestSubstring(string s) {
+        int res = 0, j = 0, n = s.size();
+        bitset<128> t = {false};
+        for(int i = 0;i<n;++i){
+            if(i!=0) t[s[i-1]] = false;
+            while(j < n && !t[s[j]]){
+                t[s[j]] = true; ++j;
+            }
+            res = max(res, j-i);
+        }
+        return res;
+    }
+
+    // 剑指 Offer 49. 丑数
+    int nthUglyNumber(int n) {
+        vector<int> dp(n);
+        dp[0] = 1;
+        int a = 0, b=0, c=0;
+        int n2,n3,n5;
+        for(int i = 1; i < n; ++i){
+            n2=dp[a]*2, n3=dp[b]*3, n5=dp[c]*5;
+            dp[i] = min(min(n2,n3), n5);
+            if(dp[i] == n2) ++a;
+            if(dp[i] == n3) ++b;
+            if(dp[i] == n5) ++c;
+        }
+        return dp.back();
+    }
+
+    // 剑指 Offer 50. 第一个只出现一次的字符
+    char firstUniqChar(string s) {
+        int m[128] = {0};
+        vector<char> v;
+        for(auto& k : s){
+            if(m[k] == 1){
+                m[k] = -1;
+            }else if(m[k] == 0){
+                m[k] = 1; v.push_back(k);
+            }
+        }
+        for(auto& i : v){
+            if(m[i] == 1) return i;
+        }
+        return ' ';
+    }
+
     // 剑指 Offer 51. 数组中的逆序对
     void reversePairs_aux(vector<int>& v, int l, int r, int& total){
         if(l < r){
