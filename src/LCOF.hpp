@@ -1072,5 +1072,45 @@ public:
         return total;
     }
 
+    // 剑指 Offer 52. 两个链表的第一个公共节点
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode* a = headA;
+        ListNode* b = headB;
+        while(a != b){
+            if(a == nullptr){
+                a = headB;
+            }else{
+                a = a->next;
+            }
+            if(b == nullptr){
+                b = headA;
+            }else{
+                b = b->next;
+            }
+        }
+        return a;
+    }
+
+    // 剑指 Offer 53 - I. 在排序数组中查找数字 I
+    int extremeInsertionIndex(vector<int>& nums, int target, bool left){
+        int lo = 0, hi = nums.size(), mid;
+        while(lo < hi){
+            mid = (lo + hi) / 2;
+            if(nums[mid] > target || (left && nums[mid] == target)){
+                hi = mid;
+            }else{
+                lo = mid + 1;
+            }
+        }
+        return lo;
+    }
+    int search(vector<int>& nums, int target) {
+        auto leftIdx = extremeInsertionIndex(nums, target, true);
+        if(leftIdx == nums.size() || nums[leftIdx] != target){
+            return 0;
+        }
+        return extremeInsertionIndex(nums, target, false) - leftIdx;
+    }
+    
 };
 }

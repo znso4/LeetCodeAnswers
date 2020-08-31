@@ -464,6 +464,29 @@ public:
         }
     }
 
+    // 34. 在排序数组中查找元素的第一个和最后一个位置
+    int extremeInsertionIndex(vector<int>& nums, int target, bool left){
+        int lo = 0, hi = nums.size(), mid;
+        while(lo < hi){
+            mid = (lo + hi) / 2;
+            if(nums[mid] > target || (left && nums[mid] == target)){
+                hi = mid;
+            }else{
+                lo = mid + 1;
+            }
+        }
+        return lo;
+    }
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> res(2, -1);
+        auto leftIdx = extremeInsertionIndex(nums, target, true);
+        if(leftIdx != nums.size() && nums[leftIdx] == target){
+            res[0] = leftIdx;
+            res[1] = extremeInsertionIndex(nums, target, false) - 1;
+        }
+        return res;
+    }
+    
     //43. 字符串相乘
     string multiply(string num1, string num2) {
         if (num1 == "0" || num2 == "0") return "0";
