@@ -1112,5 +1112,161 @@ public:
         return extremeInsertionIndex(nums, target, false) - leftIdx;
     }
     
+    // 剑指 Offer 53 - II. 0～n-1中缺失的数字
+    int missingNumber(vector<int>& nums) {
+        int lo = 0, hi = nums.size(), mid;
+        while(lo < hi){
+            mid = (lo + hi) / 2;
+            if(nums[mid] > mid){
+                hi = mid;
+            }else{
+                lo = mid + 1;
+            }
+        }
+        return lo;
+    }
+
+    // 剑指 Offer 54. 二叉搜索树的第k大节点
+    void kthLargest_dfs(TreeNode* r, int& k, int& res){
+        if(r == nullptr) return;
+        kthLargest_dfs(r->right, k, res);
+        if(k == 0) return;
+        if(--k == 0) res = r->val;
+        kthLargest_dfs(r->left, k, res);
+    }
+    int kthLargest(TreeNode* root, int k) {
+        int res = 0;
+        kthLargest_dfs(root, k ,res);
+        return res;
+    }
+
+    // 剑指 Offer 55 - I. 二叉树的深度
+    int maxDepth(TreeNode* root) {
+        if(root) return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+        else return 0;
+    }
+
+    // 剑指 Offer 55 - II. 平衡二叉树
+    int isBalanced_aux(TreeNode* root){
+        if(root == nullptr) return 0;
+        int l = isBalanced_aux(root->left);
+        int r = isBalanced_aux(root->right);
+        if(l == -1 || r == -1 || l-r < -1 || l-r > 1){
+            return -1;
+        }else{
+            return max(l, r) + 1;
+        }
+    }
+    bool isBalanced(TreeNode* root) {
+        return (isBalanced_aux(root) >= 0);
+    }
+
+    // 剑指 Offer 56 - I. 数组中数字出现的次数
+    vector<int> singleNumbers(vector<int>& nums) {
+        int xorRes = 0;
+        for(auto& k : nums){
+            xorRes ^= k;
+        }
+        int div = 1;
+        while((xorRes & div) == 0){
+            div <<= 1;
+        }
+        int a = 0, b = 0;
+        for(auto& k : nums){
+            if(k & div){
+                a ^= k;
+            }else{
+                b ^= k;
+            }
+        }
+        return {a, b};
+    }
+
+    // 剑指 Offer 56 - II. 数组中数字出现的次数 II
+    int singleNumber(vector<int>& nums) {
+        vector<int> counts(32, 0);
+        for(auto k : nums){
+            for(int i = 0; i < 32; ++i){
+                counts[i] += k & 1;
+                k >>= 1;
+            }
+        }
+        int res = 0;
+        for(int i = 31; i >= 0; --i){
+            res <<= 1;
+            res |= counts[i] % 3;
+        }
+        return res;
+    }
+
+    // 剑指 Offer 57. 和为s的两个数字
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int lo = 0, hi = nums.size()-1;
+        int s;
+        while(lo < hi){
+            s = nums[lo] + nums[hi];
+            if(target < s){
+                --hi;
+            }else if(target > s){
+                ++lo;
+            }else{
+                return {nums[lo], nums[hi]};
+            }
+        }
+        return {};
+    }
+
+    // 剑指 Offer 57 - II. 和为s的连续正数序列
+    vector<vector<int>> findContinuousSequence(int target) {
+        vector<vector<int>> res;
+        vector<int> temp_ans;
+        int d = 1, l;
+        int t1, t2;
+        int dmax = static_cast<int>(sqrt(8*target + 1) / 2 - 1.5);
+        for(int d = dmax; d > 0; --d){
+            t1 = 2*target - d*(d+1);
+            t2 = 2*(d+1);
+            if(t1 % t2 == 0){
+                l = t1 / t2;
+                for(int i = l; i <= l + d; ++i){
+                    temp_ans.push_back(i);
+                }
+                res.push_back(temp_ans);
+                temp_ans.clear();
+            }
+        }
+        return res;
+    }
+
+    // 剑指 Offer 58 - I. 翻转单词顺序
+    string reverseWords(string s) {
+        vector<string> ans;
+        int l = 0, r = 0;
+        while(l < s.length()){
+            while(l < s.length() && s[l] == ' ') ++l;
+            r = l + 1;
+            while(r < s.length() && s[r] != ' ') ++r;
+            if(r <= s.length()) ans.push_back(s.substr(l, r-l));
+            l = r + 1;
+        }
+        string res;
+        for(int i = ans.size()-1; i >=0; --i){
+            res.append(ans[i]);
+            res.append(" ");
+        }
+        if(res.length() > 0) res.pop_back();
+        return res;
+    }
+
+    // 剑指 Offer 58 - II. 左旋转字符串
+    string reverseLeftWords(string s, int n) {
+        return s.substr(n, s.length() - n) + s.substr(0, n);
+    }
+
+    // 剑指 Offer 59 - I. 滑动窗口的最大值
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+
+    }
+
 };
 }
