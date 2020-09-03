@@ -138,6 +138,42 @@ public:
     }
 };
 
+// 剑指 Offer 59 - II. 队列的最大值
+class MaxQueue {
+    deque<bool> popped;
+    deque<int> deq;
+    int frontIdx = 0;
+public:    
+    int max_value() {
+        if(deq.empty()) return -1;
+        else return deq[frontIdx];
+    }
+    
+    void push_back(int value) {
+        deq.push_back(value);
+        popped.push_back(false);
+        int i = deq.size()-2;
+        while(i >= frontIdx && deq[i] < value){
+            popped[i] = true;
+            --i;
+        }
+        if(i < frontIdx) frontIdx = deq.size() -1;
+    }
+    
+    int pop_front() {
+        if(deq.empty()) return -1;
+        if(frontIdx == 0){
+            while(++frontIdx < deq.size() && popped[frontIdx]);
+            if(frontIdx >= deq.size()) frontIdx = 1;
+        }
+        int ret = deq.front();
+        deq.pop_front();
+        popped.pop_front();
+        --frontIdx;
+        return ret;
+    }
+};
+
 class Solution {
 public:
     // 剑指Offer  01.07. 旋转矩阵
@@ -482,6 +518,11 @@ public:
 
     // 剑指Offer 20. 表示数值的字符串
     bool isNumber(string s) {
+        regex r("\\s*[+-]?((\\.[0-9]+)|([0-9]+\\.?[0-9]*))([e|E][+-]?[0-9]+)?\\s*", regex::optimize);
+        return regex_match(s, r);
+    }
+    /*
+    bool isNumber(string s) {
         class DFA{
             vector<vector<int>> transfer_mat;
             int status;
@@ -521,6 +562,7 @@ public:
         }
         return allowed_status.count(dfa.get_status());
     }
+    */
 
     // 剑指Offer 21. 调整数组顺序使奇数位于偶数前面
     vector<int> exchange(vector<int>& nums) {
@@ -1265,7 +1307,250 @@ public:
 
     // 剑指 Offer 59 - I. 滑动窗口的最大值
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> deq;
+        int n = nums.size();
+        if(n==0 || k==0) return {0};
+        if(k==1) return nums;
+        int maxIdx = 0;
+        for(int i = 0; i < k; ++i){
+            while(!deq.empty() && nums[i] > nums[deq.back()]){
+                deq.pop_back();
+            }
+            deq.push_back(i);
+            if(nums[i] > nums[maxIdx]) maxIdx = i;
+        }
+        vector<int> ans(n-k+1);
+        ans[0] = nums[maxIdx];
+        for(int i = k; i < n; ++i){
+            if(!deq.empty() && deq.front() == i-k) deq.pop_front();
+            while(!deq.empty() && nums[i] > nums[deq.back()]){
+                deq.pop_back();
+            }
+            deq.push_back(i);
+            ans[i-k+1] = nums[deq.front()];
+        }
+        return ans;
+    }
 
+    // 剑指 Offer 60. n个骰子的点数
+    vector<double> twoSum(int n) {
+        vector<vector<int>> ans = {{1,1,1,1,1,1}};
+        double p_base = 1.0/6;
+        for(int i = 2; i <= n; ++i){
+            p_base *= 1.0/6;
+            vector<int> temp;
+            int l = -6, r = 0;
+            int half_size = 5*i/2;
+            temp.reserve(5*i + 1);
+            int sum = 0;
+            while(temp.size() <= half_size){
+                if(l >= 0) sum -= ans.back()[l];
+                if(r < ans.back().size()) sum += ans.back()[r];
+                ++l; ++r;
+                temp.push_back(sum);
+            }
+            temp.insert(temp.end(), temp.rbegin()+(i%2==0), temp.rend());
+            ans.push_back(temp);
+        }
+        vector<double> result(ans.back().size());
+        for(int i = 0; i < result.size(); ++i){
+            result[i] = p_base * ans.back()[i];
+        }
+        return result;
+    }
+
+    // 剑指 Offer 61. 扑克牌中的顺子
+    bool isStraight(vector<int>& nums) {
+        int minc = 20, maxc = 0;
+        int count[14] = {0};
+        for(auto k : nums){
+            ++count[k];
+            if(k){
+                if(count[k] >= 2) return false;
+                if(k < minc) minc = k;
+                if(k > maxc) maxc = k;
+            }
+        }
+        return (maxc-minc <= 4);
+    }
+
+    // 剑指 Offer 62. 圆圈中最后剩下的数字
+    int lastRemaining(int n, int m){
+        int ans = 0;
+        for(int i = 2; i <= n; ++i){
+            ans = (ans + m) % i;
+        }
+        return ans;
+        // 递归解法
+        // if(n == 1) return 0;
+        // else return (m+lastRemaining(n-1, m)) %n;
+    }
+
+    // 剑指 Offer 63. 股票的最大利润
+    int maxProfit(vector<int>& prices) {
+        int minPrice = numeric_limits<int>::max();
+        int ans = 0;
+        for(int i = 0; i < prices.size(); ++i){
+            ans = max(ans, prices[i] - minPrice);
+            minPrice = min(minPrice, prices[i]);
+        }
+        return ans;
+    }
+
+    // 剑指 Offer 64. 求1+2+…+n
+    int sumNums(int n) {
+        n && (n += sumNums(n-1));
+        return n;
+        // 暴力展开解法
+        // int ans = 0, A = n, B = n + 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // (B & 1) && (ans += A);
+        // A <<= 1;
+        // B >>= 1;
+
+        // return ans >> 1;
+    }
+
+    // 剑指 Offer 65. 不用加减乘除做加法
+    int add(int a, int b) {
+        while(b != 0) { // 当进位为 0 时跳出
+            int c = (unsigned int)(a & b) << 1;  // c = 进位
+            a ^= b; // a = 非进位和
+            b = c; // b = 进位
+        }
+        return a;
+    }
+
+    // 剑指 Offer 66. 构建乘积数组
+    vector<int> constructArr(vector<int>& a) {
+        if(a.empty()) return {};
+        vector<int> b(a.size());
+        b[0] = 1;
+        for(int i = 1;i < b.size(); ++i){
+            b[i] = b[i-1] * a[i-1];
+        }
+        int tmp = 1;
+        for(int i = b.size()-1; i > 0; --i){
+            tmp *= a[i];
+            b[i-1] *= tmp;
+        }
+        return b;
+    }
+
+    // 剑指 Offer 67. 把字符串转换成整数
+    int strToInt_aux(char c){
+        if(c == ' ') return 0;
+        else if(c == '+' || c == '-') return 1;
+        else if(c >= '0' && c <= '9') return 2;
+        else return 3;
+    }
+    int strToInt(string str) {
+        int t[4][4] = {
+            {0,1,2,-1},
+            {-1,-1,2,-1},
+            {3,3,2,3},
+            {-1,-1,-1,-1},
+        };
+        int status = 0;
+        char sign = 0;
+        vector<char> num;
+        for(auto c : str){
+            status = t[status][strToInt_aux(c)];
+            if(status == -1) return 0;
+            else if(status == 2) num.push_back(c);
+            else if(status == 3) break;
+            else if(status == 1 && c == '-') sign = -1;
+        }
+        if(num.size() == 0) return 0;
+        unsigned int ans = 0;
+        for(int i = 0; i < num.size(); ++i){
+            if(ans > 214748364 || ans == 214748364 && (num[i]+sign) > '7'){
+                if(sign == 0) return 2147483647;
+                else return -2147483648;
+            }
+            ans = ans * 10 + (num[i]-'0');
+        }
+        if(sign == 0){
+            return ans;
+        }else{
+            return static_cast<int>(-ans);
+        }
+    }
+
+    // 剑指 Offer 68 - I. 二叉搜索树的最近公共祖先
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root == nullptr || p == nullptr || q == nullptr) return root;
+        if(p->val > q->val) swap(p, q);
+        while(root){
+            if(q->val < root->val) root = root->left;
+            else if(p->val > root->val) root = root->right;
+            else return root;
+        }
+        return root;
+    }
+
+    // 剑指 Offer 68 - II. 二叉树的最近公共祖先
+    TreeNode* lowestCommonAncestor2(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root == nullptr || root == p || root == q) return root;
+        else{
+            auto l = lowestCommonAncestor(root->left, p, q);
+            auto r = lowestCommonAncestor(root->right, p, q);
+            if(l == nullptr) return r;
+            else if(r == nullptr) return l;
+            else return root;
+        }
     }
 
 };
