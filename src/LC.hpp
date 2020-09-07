@@ -837,6 +837,39 @@ public:
         return res;
     }
 
+    // 347. 前 K 个高频元素
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> m;
+        m.rehash(nums.size()*1.5);
+        for(auto& i : nums){
+            ++m[i];
+        }
+        vector<pair<int,int>> f(m.begin(), m.end());
+        int l = 0, r = f.size()-1;
+        while(true){
+            int pivot_i = r;
+            int j = l-1;
+            for(int i = l; i < r; ++i){
+                if(f[i].second > f[pivot_i].second){
+                    ++j; swap(f[j], f[i]);
+                }
+            }
+            swap(f[++j], f[r]);
+            if(j == k-1){
+                break;
+            }else if(j < k-1){
+                l = j+1;
+            }else{
+                r =j-1;
+            }
+        }
+        vector<int> ans(k);
+        for(int i = 0; i < k;++i){
+            ans[i] = f[i].first;
+        }
+        return ans;
+    }
+
     //365. 水壶问题
     bool canMeasureWater(int x, int y, int z) {
         if(x<0 || y<0 || z<0) return false;
@@ -954,6 +987,72 @@ public:
     ListNode* addTwoNumbers_forwardList(ListNode* l1, ListNode* l2) {
         return handleCarry(reverseAdd(l1, l2));
     }
+
+    // 466. 统计重复个数
+    int getMaxRepetitions(string s1, int n1, string s2, int n2) {
+        if (n1 == 0) {
+            return 0;
+        }
+        int s1cnt = 0, index = 0, s2cnt = 0;
+        // recall 是我们用来找循环节的变量，它是一个哈希映射
+        // 我们如何找循环节？假设我们遍历了 s1cnt 个 s1，此时匹配到了第 s2cnt 个 s2 中的第 index 个字符
+        // 如果我们之前遍历了 s1cnt' 个 s1 时，匹配到的是第 s2cnt' 个 s2 中同样的第 index 个字符，那么就有循环节了
+        // 我们用 (s1cnt', s2cnt', index) 和 (s1cnt, s2cnt, index) 表示两次包含相同 index 的匹配结果
+        // 那么哈希映射中的键就是 index，值就是 (s1cnt', s2cnt') 这个二元组
+        // 循环节就是；
+        //    - 前 s1cnt' 个 s1 包含了 s2cnt' 个 s2
+        //    - 以后的每 (s1cnt - s1cnt') 个 s1 包含了 (s2cnt - s2cnt') 个 s2
+        // 那么还会剩下 (n1 - s1cnt') % (s1cnt - s1cnt') 个 s1, 我们对这些与 s2 进行暴力匹配
+        // 注意 s2 要从第 index 个字符开始匹配
+        unordered_map<int, pair<int, int>> recall;
+        pair<int, int> pre_loop, in_loop;
+        while (true) {
+            // 我们多遍历一个 s1，看看能不能找到循环节
+            ++s1cnt;
+            for (char ch: s1) {
+                if (ch == s2[index]) {
+                    index += 1;
+                    if (index == s2.size()) {
+                        ++s2cnt;
+                        index = 0;
+                    }
+                }
+            }
+            // 还没有找到循环节，所有的 s1 就用完了
+            if (s1cnt == n1) {
+                return s2cnt / n2;
+            }
+            // 出现了之前的 index，表示找到了循环节
+            if (recall.count(index)) {
+                auto [s1cnt_prime, s2cnt_prime] = recall[index];
+                // 前 s1cnt' 个 s1 包含了 s2cnt' 个 s2
+                pre_loop = {s1cnt_prime, s2cnt_prime};
+                // 以后的每 (s1cnt - s1cnt') 个 s1 包含了 (s2cnt - s2cnt') 个 s2
+                in_loop = {s1cnt - s1cnt_prime, s2cnt - s2cnt_prime};
+                break;
+            }
+            else {
+                recall[index] = {s1cnt, s2cnt};
+            }
+        }
+        // ans 存储的是 S1 包含的 s2 的数量，考虑的之前的 pre_loop 和 in_loop
+        int ans = pre_loop.second + (n1 - pre_loop.first) / in_loop.first * in_loop.second;
+        // S1 的末尾还剩下一些 s1，我们暴力进行匹配
+        int rest = (n1 - pre_loop.first) % in_loop.first;
+        for (int i = 0; i < rest; ++i) {
+            for (char ch: s1) {
+                if (ch == s2[index]) {
+                    ++index;
+                    if (index == s2.size()) {
+                        ++ans;
+                        index = 0;
+                    }
+                }
+            }
+        }
+        // S1 包含 ans 个 s2，那么就包含 ans / n2 个 S2
+        return ans / n2;
+    }
     
     // 469. 凸多边形
     int signof(int i){
@@ -1057,6 +1156,24 @@ public:
         return result;
     }
 
+    // 822. 翻转卡片游戏
+    int flipgame(vector<int>& fronts, vector<int>& backs) {
+        int sz = fronts.size();
+        set<int> map;
+        for(int i = 0; i < sz; ++i){
+            if(fronts[i] != backs[i]){
+                map.insert(fronts[i]);
+                map.insert(backs[i]);
+            }
+        }
+        for(auto& item : map){
+            int i = 0;
+            for(; i < sz && (fronts[i] != item || backs[i] != item); ++i);
+            if(i >= sz) return item;
+        }
+        return 0;
+    }
+
     // 869. 重新排序得到 2 的幂
     bool reorderedPowerOf2(int N) {
         if(N <= 0) return false;
@@ -1150,6 +1267,28 @@ public:
         }
         return result;
     }
+
+    // 1024. 视频拼接
+    int videoStitching(vector<vector<int>>& clips, int T) {
+        sort(clips.begin(), clips.end());
+        if(clips.front()[0] > 0) return -1;
+        int ans = 0;
+        int curIdx = 0;
+        int tail = 0;
+        while(tail < T){
+            int maxtail = tail;
+            bool found = false;
+            for(;curIdx<clips.size() && clips[curIdx][0] <= tail; ++curIdx){
+                maxtail = max(maxtail, clips[curIdx][1]); found = true;
+            }
+            if(found){
+                ++ans; tail = maxtail;
+            }else{
+                return -1;
+            }
+        }
+        return ans;
+    }
     
     //1111. 有效括号的嵌套深度
     vector<int> maxDepthAfterSplit(string seq) {
@@ -1205,6 +1344,33 @@ public:
             }
         }
         return maxres*maxres;
+    }
+
+    // 1246. 删除回文子数组
+    int minimumMoves(vector<int>& arr) {
+        vector<vector<int>> dp(arr.size(), vector<int>(arr.size()));
+        for(int i = 0; i < arr.size(); ++i){
+            dp[i][i] = 1;
+        }
+        for(int i = 0; i < dp.size()-1; ++i){
+            if(arr[i] == arr[i + 1]){
+                dp[i][i + 1] = 1;
+            }else{
+                dp[i][i + 1] = 2;
+            }   
+        }
+        for(int len = 2; len < arr.size(); ++len){
+            for(int i = 0; i < arr.size() - len; ++i){
+                dp[i][i + len] = len + 1;
+                for(int k = 0; k < len; ++k){
+                    dp[i][i + len] = min(dp[i][i + len], dp[i][i + k] + dp[i + k + 1][i + len]);
+                }
+                if(arr[i] == arr[i + len]){
+                    dp[i][i + len] = min(dp[i][i + len], dp[i + 1][i + len - 1]);
+                }
+            }
+        }
+        return dp[0].back();
     }
 
 };

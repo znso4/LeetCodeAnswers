@@ -5,6 +5,8 @@
 
 project(LeetCode)
 
+set(CMAKE_CXX_STANDARD 17)
+
 # use OpenCV
 # set(OpenCV_DIR D:/sdk/opencv)
 # set(OpenCV_ARCH "x64")
