@@ -486,6 +486,41 @@ public:
         }
         return res;
     }
+
+    // 40. 组合总和 II
+    void combinationSum2_dfs(vector<pair<int, int>>& freq,
+    vector<vector<int>>& ans, vector<int>& sequence, int pos, int rest){
+        if (rest == 0) {
+            ans.push_back(sequence);
+            return;
+        }
+        if (pos == freq.size() || rest < freq[pos].first) {
+            return;
+        }
+        combinationSum2_dfs(freq, ans, sequence, pos + 1, rest);
+        int most = min(rest / freq[pos].first, freq[pos].second);
+        for (int i = 1; i <= most; ++i) {
+            sequence.push_back(freq[pos].first);
+            combinationSum2_dfs(freq, ans, sequence, pos + 1, rest - i * freq[pos].first);
+        }
+        for (int i = 1; i <= most; ++i) {
+            sequence.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<pair<int, int>> freq;
+        {
+            map<int, int> m;
+            for(auto& i : candidates){
+                ++m[i];
+            }
+            freq.assign(m.begin(), m.end());
+        }
+        vector<vector<int>> ans;
+        vector<int> sequence;
+        combinationSum2_dfs(freq, ans, sequence, 0, target);
+        return ans;
+    }
     
     //43. 字符串相乘
     string multiply(string num1, string num2) {
