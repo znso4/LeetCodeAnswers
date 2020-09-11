@@ -15,6 +15,7 @@
 #include<type_traits>
 #include<random>
 #include<algorithm>
+#include<numeric>
 #include<atomic>
 #include<thread>
 #include<functional>

@@ -487,9 +487,33 @@ public:
         return res;
     }
 
+    // 39. 组合总和
+    void combinationSum_dfs(vector<vector<int>>& ans, vector<int>& sequence, vector<int>& candidates, int pos, int rest){
+        if(rest == 0){
+            ans.push_back(sequence);
+        }else if(pos < candidates.size() && rest >= candidates[pos]){
+            combinationSum_dfs(ans, sequence, candidates, pos+1, rest);
+            auto acc = candidates[pos];
+            while(acc <= rest){
+                sequence.push_back(candidates[pos]);
+                combinationSum_dfs(ans, sequence, candidates, pos+1, rest-acc);
+                acc+=candidates[pos];
+            }
+            while(acc > candidates[pos]){
+                sequence.pop_back(); acc -= candidates[pos];
+            }
+        }
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        vector<int> sequence;
+        sort(candidates.begin(), candidates.end());
+        combinationSum_dfs(ans, sequence, candidates, 0, target);
+        return ans;
+    }
+
     // 40. 组合总和 II
-    void combinationSum2_dfs(vector<pair<int, int>>& freq,
-    vector<vector<int>>& ans, vector<int>& sequence, int pos, int rest){
+    void combinationSum2_dfs(vector<pair<int, int>>& freq, vector<vector<int>>& ans, vector<int>& sequence, int pos, int rest){
         if (rest == 0) {
             ans.push_back(sequence);
             return;
@@ -660,6 +684,24 @@ public:
         return t[n-1];
     }
 
+    // 77. 组合
+    void combine_dfs(vector<vector<int>>& ans, vector<int>& seq, int n, int k, int i){
+        if(k == 0){
+            ans.push_back(seq);
+        }else if(i <= n){
+            seq.push_back(i);
+            combine_dfs(ans, seq, n, k-1, i+1);
+            seq.pop_back();
+            combine_dfs(ans, seq, n, k, i+1);
+        }
+    }
+    vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> ans;
+        vector<int> seq;
+        combine_dfs(ans, seq, n, k, 1);
+        return ans;
+    }
+
     // 96. 不同的二叉搜索树
     int numTrees(int n) {
         vector<int> t = {1,1};
@@ -805,6 +847,24 @@ public:
         return p;
     }
     
+    // 216. 组合总和 III
+    void combinationSum3_dfs(vector<vector<int>>& ans, vector<int>& seq, int k, int rest, int i){
+        if(k == 0 && rest == 0){
+            ans.push_back(seq);
+        }else if(i <= 9 && i <= rest){
+            combinationSum3_dfs(ans, seq, k, rest, i+1);
+            seq.push_back(i);
+            combinationSum3_dfs(ans, seq, k-1, rest-i, i+1);
+            seq.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<vector<int>> ans;
+        vector<int> seq;
+        combinationSum3_dfs(ans, seq, k, n, 1);
+        return ans;
+    }
+
     // 226. 翻转二叉树(递归)
     TreeNode* invertTree(TreeNode* root) {
         if(root){
@@ -1155,6 +1215,25 @@ public:
             }
         }
         return ret;
+    }
+
+    // 718. 最长重复子数组
+    int findLength(vector<int>& A, vector<int>& B) {
+        vector<vector<int>> dp(A.size(), vector<int>(B.size(), 0));
+        int ans = 0;
+        for(int j = 0; j < B.size(); ++j){
+            if(A[0] == B[j]) dp[0][j] = 1;
+        }
+        for(int i = 1; i < A.size(); ++i){
+            dp[i][0] = (A[i] == B[0]);
+            for(int j = 1; j < B.size(); ++j){
+                if(A[i] == B[j]){
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                    ans = max(ans, dp[i][j]);
+                }
+            }
+        }
+        return ans;
     }
     
     // 740. 删除与获得点数
