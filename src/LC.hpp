@@ -920,6 +920,23 @@ public:
         return ((countBetween(l, l, nums) > 1) ? l : r);
     }
 
+    // 323. 无向图中连通分量的数目
+    int countComponents_find(vector<int>& p, int x){
+        while(p[x] != -1) x = p[x];
+        return x;
+    }
+    int countComponents(int n, vector<vector<int>>& edges) {
+        vector<int> parents(n, -1);
+        for(auto& e : edges){
+            auto root1 = countComponents_find(parents, e[0]);
+            auto root2 = countComponents_find(parents, e[1]);
+            if(root1 != root2){
+                parents[root1] = root2; --n;
+            } 
+        }
+        return n;
+    }
+
     // 343. 整数拆分
     int integerBreak(int n) {
         if(n<=3) return n/3+1;
