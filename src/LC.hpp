@@ -995,6 +995,28 @@ public:
             return (z%gcd(x, y)==0 && z<=x+y);
         }
     }
+
+    // 377. 组合总和 IV
+    int combinationSum4(vector<int>& nums, int target) {
+        if(nums.empty()) return 0;
+        sort(nums.begin(), nums.end());
+        vector<int> dp(target + 1, 0);
+        dp[0] = 1;
+        for (int i = 0; i <= target; ++i) {
+            // auto tail = upper_bound(nums.begin(), nums.end(), i);
+            // for_each(nums.begin(), tail, [&](auto& k){dp[i] += dp[i-k];});
+            for(auto& k : nums){
+                if(k <= i){
+                    if(dp[i] >= INT_MAX - dp[i - k]){
+                        dp[i] = INT_MAX;break;
+                    }else{
+                        dp[i] = dp[i] + dp[i - k];
+                    }
+                }
+            }
+        }
+        return dp[target];
+    }
     
     // 394. 字符串解码
     int decodeString_aux(string& s, int& k){
@@ -1232,6 +1254,26 @@ public:
             }
         }
         return ret;
+    }
+
+    // 637. 二叉树的层平均值
+    vector<double> averageOfLevels(TreeNode* root) {
+        vector<double> ans;
+        double sum = 0;
+        deque<vector<TreeNode*>> dp(2);
+        if(root) dp[0].push_back(root);
+        while(!dp[0].empty()){
+            sum = 0;
+            for(auto item : dp[0]){
+                if(item->left) dp[1].push_back(item->left);
+                if(item->right) dp[1].push_back(item->right);
+                sum += item->val;
+            }
+            ans.push_back(sum/dp[0].size());
+            dp.pop_front();
+            dp.resize(2);
+        }
+        return ans;
     }
 
     // 718. 最长重复子数组
