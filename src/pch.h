@@ -1,5 +1,9 @@
 ﻿#pragma once
+// basic
+#include<iostream>
 #include<string>
+#include<sstream>
+// container
 #include<vector>
 #include<queue>
 #include<deque>
@@ -10,8 +14,8 @@
 #include<set>
 #include<unordered_set>
 #include<tuple>
+//utility
 #include<regex>
-#include<iostream>
 #include<type_traits>
 #include<random>
 #include<algorithm>

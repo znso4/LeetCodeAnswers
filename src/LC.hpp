@@ -702,6 +702,40 @@ public:
         return ans;
     }
 
+    // 92. 反转链表 II
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if(m<=1){
+            ListNode* cur = head;
+            ListNode* mid = nullptr;
+            for(int i = 1; (i <= n) && cur; ++i){
+                ListNode* tmp = cur;
+                cur = cur->next;
+                tmp->next = mid;
+                mid = tmp;
+            }
+            head->next = cur;
+            return mid;
+        }else{
+            ListNode* prev = head;
+            ListNode* cur = head->next;
+            for(int i = 2; i < m; ++i){
+                prev = cur;
+                cur = cur->next;
+            }
+            ListNode* mid = nullptr;
+            ListNode* mid_tail = cur;
+            for(int i = m; (i <= n) && cur; ++i){
+                ListNode* tmp = cur;
+                cur = cur->next;
+                tmp->next = mid;
+                mid = tmp;
+            }
+            mid_tail->next = cur;
+            prev->next = mid;
+            return head;
+        }
+    }
+
     // 96. 不同的二叉搜索树
     int numTrees(int n) {
         vector<int> t = {1,1};
@@ -788,26 +822,76 @@ public:
         return false;
     }
 
-    // TODO: 151. 翻转字符串里的单词
-    // string reverseWords(string s) {
-    //     string ret;
-    //     int tail = s.size() - 1;
-    //     for (; tail >= 0; --tail) {
-    //         if (s[tail] != ' ') {
-    //             int head = tail;
-    //             for (; head >= 0 && s[head] != ' '; --head);
-    //             for (int cur = head + 1; cur <= tail; ++cur) {
-    //                 ret += s[cur];
-    //             }
-    //             tail = head;
-    //             ret += ' ';
-    //         }
-    //     }
-    //     if (!ret.empty()) {
-    //         ret.erase(ret.size() - 1, 1);
-    //     }
-    //     return ret;
-    // }
+    // 148. 排序链表
+    ListNode* sortList(ListNode* head) {
+        if(head == nullptr || head->next == nullptr) return head;
+        ListNode* l = nullptr;
+        ListNode* lt = nullptr;
+        ListNode* cur = head->next;
+        ListNode* prev = head;
+        while(cur){
+            if(cur->val < head->val){
+                if(l == nullptr){
+                    l = cur; lt = cur;
+                }else{
+                    lt->next = cur; lt = cur;
+                }
+                cur = cur->next;
+                prev->next = cur;
+            }else{
+                prev = cur;
+                cur = cur->next;
+            }
+        }
+        if(lt) lt->next = nullptr;
+        head->next = sortList(head->next);
+        ListNode* ans = sortList(l);
+        lt = ans;
+        while(lt && lt->next){
+            lt = lt->next;
+        }
+        if(ans){
+            lt->next = head;
+            head = ans;
+        }
+        return head;
+    }
+
+    // 151. 翻转字符串里的单词
+    string reverseWords(string s) {
+        stringstream ss(s);
+        stack<string> words;
+        string tmp;
+        while(ss>>tmp){
+            words.push(tmp);
+        }
+        if(words.empty()) return "";
+        string ans = words.top();
+        words.pop();
+        while(!words.empty()){
+            ans.push_back(' ');
+            ans.append(words.top());
+            words.pop();
+        }
+        return ans;
+        // string ret;
+        // int tail = s.size() - 1;
+        // for (; tail >= 0; --tail) {
+        //     if (s[tail] != ' ') {
+        //         int head = tail;
+        //         for (; head >= 0 && s[head] != ' '; --head);
+        //         for (int cur = head + 1; cur <= tail; ++cur) {
+        //             ret += s[cur];
+        //         }
+        //         tail = head;
+        //         ret += ' ';
+        //     }
+        // }
+        // if (!ret.empty()) {
+        //     ret.erase(ret.size() - 1, 1);
+        // }
+        // return ret;
+    }
 
     //198. 打家劫舍
     int rob(vector<int>& nums) {
