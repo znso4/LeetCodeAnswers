@@ -702,6 +702,38 @@ public:
         return ans;
     }
 
+    // 79. 单词搜索
+    bool exist_aux(vector<vector<char>>& board, vector<vector<char>>& searched, int i, int j, string& word, int w){
+        if(board[i][j] != word[w] || searched[i][j]) return false;
+        if(w == word.length()-1) return true;
+        searched[i][j] = 1;
+        if(i > 0){
+            if(exist_aux(board, searched, i-1, j, word, w+1)) return true;
+        }
+        if(j > 0){
+            if(exist_aux(board, searched, i, j-1, word, w+1)) return true;
+        }
+        if(i < board.size()-1){
+            if(exist_aux(board, searched, i+1, j, word, w+1)) return true;
+        }
+        if(j < board[i].size()-1){
+            if(exist_aux(board, searched, i, j+1, word, w+1)) return true;
+        }
+        searched[i][j] = 0;
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        vector<vector<char>> searched(board.size(), vector<char>(board[0].size(), 0));
+        for(int i = 0; i < board.size(); ++i){
+            for(int j = 0; j < board[i].size(); ++j){
+                if(exist_aux(board, searched, i, j, word, 0)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // 92. 反转链表 II
     ListNode* reverseBetween(ListNode* head, int m, int n) {
         if(m<=1){
@@ -1431,6 +1463,20 @@ public:
         return 0;
     }
 
+    // 837. 新21点
+    double new21Game(int N, int K, int W) {
+        if(K == 0) return 1.0;
+        vector<double> dp(K+W, 0);
+        for(int i = K; i <= N && i < dp.size(); ++i){
+            dp[i] = 1.0;
+        }
+        dp[K-1] = 1.0 * min(N - K + 1, W) / W;
+        for (int i = K - 2; i >= 0; --i) {
+            dp[i] = dp[i + 1] - (dp[i + W + 1] - dp[i + 1]) / W;
+        }
+        return dp[0];
+    }
+
     // 869. 重新排序得到 2 的幂
     bool reorderedPowerOf2(int N) {
         if(N <= 0) return false;
@@ -1628,6 +1674,79 @@ public:
             }
         }
         return dp[0].back();
+    }
+
+    // 1420. 生成数组
+    int numOfArrays(int n, int m, int k) {
+        const int base = 1000000007;
+        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(m+1, vector<int>(k+1)));
+        // int dp[51][101][51] = {0};
+        for(int i = 1; i <= n; ++i){
+            for(int j = 1; j <= m; ++j){
+                for(int l = 1; l <= k; ++l){
+                    if(i == 1 && l == 1){
+                        dp[i][j][l] = 1;
+                    }else{
+                        dp[i][j][l] = (long)j * dp[i-1][j][l] % base;
+                        for(int t = 1; t < j; ++t){
+                            dp[i][j][l] = (dp[i][j][l] + dp[i-1][t][l-1]) % base;
+                        }
+                    }
+                }
+            }
+        }
+        int ans = 0;
+        for(int j = 1; j <= m; ++j){
+            ans = (ans + dp[n][j][k]) % base;
+        }
+        return ans;
+    }
+
+    // 面试题 17.24. 最大子矩阵
+    tuple<int, int, int> getMaxMatrix_aux(vector<int>& nums) {
+        if (nums.empty()) return {-1, -1, INT_MIN};
+        int dp = nums[0];
+        int sum = dp;
+        int ans_l = 0, l = 0;
+        int ans_r = 0, r = 0;
+        for (int i = 1; i < nums.size(); ++i) {
+            if(dp > 0){
+                dp += nums[i];
+            }else{
+                dp = nums[i]; l = i;
+            }
+            if(sum < dp){
+                sum = dp; ans_l = l; ans_r = i;
+            }
+        }
+        return {ans_l, ans_r, sum};
+    }
+    vector<int> getMaxMatrix(vector<vector<int>>& matrix) {
+        int N = matrix.size(), M = matrix[0].size();
+        vector<vector<int>> sumsInRow(N, vector<int>(M+1));
+        for(int i = 0; i < N; ++i){
+            int tmp = 0;
+            for(int j = 1; j <= M; ++j){
+                tmp += matrix[i][j-1];
+                sumsInRow[i][j] = tmp;
+            }
+        }
+        int maxsubsum = INT_MIN;
+        vector<int> ans(4, -1);
+        for(int lo = 0; lo < M; ++lo){
+            for(int hi = lo+1; hi <= M; ++hi){
+                vector<int> b(N);
+                for(int i = 0; i < N; ++i){
+                    b[i] = sumsInRow[i][hi] - sumsInRow[i][lo];
+                }
+                auto res = getMaxMatrix_aux(b);
+                if(get<2>(res) > maxsubsum){
+                    maxsubsum = get<2>(res);
+                    ans = {get<0>(res), lo, get<1>(res), hi-1};
+                }
+            }
+        }
+        return ans;
     }
 
 };
