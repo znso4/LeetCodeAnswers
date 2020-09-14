@@ -768,6 +768,20 @@ public:
         }
     }
 
+    // 94. 二叉树的中序遍历
+    void inorderTraversal_aux(TreeNode* root, vector<int>& ans){
+        if(root){
+            inorderTraversal_aux(root->left, ans);
+            ans.push_back(root->val);
+            inorderTraversal_aux(root->right, ans);
+        }
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        inorderTraversal_aux(root, ans);
+        return ans;
+    }
+
     // 96. 不同的二叉搜索树
     int numTrees(int n) {
         vector<int> t = {1,1};
@@ -1172,6 +1186,25 @@ public:
             ++k;
         }
         return str;
+    }
+
+    // 410. 分割数组的最大值
+    int splitArray(vector<int>& nums, int m) {
+        int n = nums.size();
+        vector<vector<long>> dp(n+1, vector<long>(m+1, numeric_limits<long>::max()));
+        vector<long> sub(n+1, 0);
+        for(int i = 0; i < n; ++i){
+            sub[i+1] = sub[i] + nums[i];
+        }
+        dp[0][0] = 0;
+        for(int i = 1; i <= n; ++i){
+            for(int j = 1; j <= min(i, m); ++j){
+                for(int k = 0; k < i; ++k){
+                    dp[i][j] = min(dp[i][j], max(dp[k][j-1], sub[i] - sub[k]));
+                }
+            }
+        }
+        return static_cast<int>(dp[n][m]);
     }
 
     //415. 字符串相加
@@ -1674,6 +1707,30 @@ public:
             }
         }
         return dp[0].back();
+    }
+
+    // 1262. 可被三整除的最大和
+    int maxSumDivThree(vector<int>& nums) {
+        vector<vector<int>> dp(nums.size()+1, vector<int>(3, 0));
+        dp[0][1] = numeric_limits<int>::min();
+        dp[0][2] = numeric_limits<int>::min();
+        for(int i = 0; i < nums.size(); ++i){
+            switch(nums[i] % 3){
+            case 0:
+                dp[i+1][0] = max(dp[i][0], dp[i][0] + nums[i]);
+                dp[i+1][1] = max(dp[i][1], dp[i][1] + nums[i]);
+                dp[i+1][2] = max(dp[i][2], dp[i][2] + nums[i]); break;
+            case 1:
+                dp[i+1][0] = max(dp[i][0], dp[i][2] + nums[i]);
+                dp[i+1][1] = max(dp[i][1], dp[i][0] + nums[i]);
+                dp[i+1][2] = max(dp[i][2], dp[i][1] + nums[i]); break;
+            case 2:
+                dp[i+1][0] = max(dp[i][0], dp[i][1] + nums[i]);
+                dp[i+1][1] = max(dp[i][1], dp[i][2] + nums[i]);
+                dp[i+1][2] = max(dp[i][2], dp[i][0] + nums[i]); break;
+            }
+        }
+        return dp.back()[0];
     }
 
     // 1420. 生成数组
