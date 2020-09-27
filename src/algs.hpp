@@ -1,10 +1,7 @@
 ﻿#include "pch.h"
 #pragma once
 
-using std::vector;
-using std::size_t;
-using std::cout;
-using std::endl;
+using namespace std;
 
 template<typename T>
 void print(T t) {
@@ -41,8 +38,10 @@ size_t fib(size_t N) {
 }
 
 // 最大公约数
-int gcd(int a, int b){
-    int c = b%a;
+template<typename T>
+typename enable_if<is_integral<T>::value, T>::type
+gcd(T a, T b){
+    T c = b%a;
     while(c!=0){
         b=a;
         a=c;
@@ -52,18 +51,36 @@ int gcd(int a, int b){
 }
 
 // 阶乘
-typedef unsigned long long uint64;
-uint64 factor(size_t x, size_t base = 0){
-    const static size_t BASE = base;
-    static vector<uint64> FACTOR = {1};
-    if(BASE){
-        for(auto i=FACTOR.size();i<=x;++i){
-            FACTOR.push_back(i*FACTOR.back()%BASE);
-        }
-    }else{
-        for(auto i=FACTOR.size();i<=x;++i){
-            FACTOR.push_back(i*FACTOR.back());
-        }
+template<typename T>
+typename enable_if<is_integral<T>::value, T>::type
+factor(T x){
+    static vector<T> FACTOR = {1};
+    for(auto i=FACTOR.size();i<=x;++i){
+        FACTOR.push_back(i*FACTOR.back());
     }
     return FACTOR[x];
+}
+
+template<typename T, T BASE>
+typename enable_if<is_integral<T>::value && (BASE!=0), T>::type
+factor_base(T x){
+    static vector<T> FACTOR = {1};
+    for(auto i=FACTOR.size();i<=x;++i){
+        FACTOR.push_back(i*FACTOR.back()%BASE);
+    }
+    return FACTOR[x];
+}
+
+// 排列数
+template<typename T>
+typename enable_if<is_integral<T>::value, T>::type
+nPr(T n, T r){
+    return factor(n)/factor(n-r);
+}
+
+// 组合数
+template<typename T>
+typename enable_if<is_integral<T>::value, T>::type
+nCr(T n, T r){
+    return nPr(n,r)/nPr(r,r);
 }

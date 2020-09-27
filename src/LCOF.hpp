@@ -1074,14 +1074,14 @@ public:
     char firstUniqChar(string s) {
         int m[128] = {0};
         vector<char> v;
-        for(auto& k : s){
+        for(unsigned char k : s){
             if(m[k] == 1){
                 m[k] = -1;
             }else if(m[k] == 0){
                 m[k] = 1; v.push_back(k);
             }
         }
-        for(auto& i : v){
+        for(unsigned char i : v){
             if(m[i] == 1) return i;
         }
         return ' ';
@@ -1265,7 +1265,7 @@ public:
         int d = 1, l;
         int t1, t2;
         int dmax = static_cast<int>(sqrt(8*target + 1) / 2 - 1.5);
-        for(int d = dmax; d > 0; --d){
+        for(d = dmax; d > 0; --d){
             t1 = 2*target - d*(d+1);
             t2 = 2*(d+1);
             if(t1 % t2 == 0){
@@ -1516,7 +1516,7 @@ public:
         if(num.size() == 0) return 0;
         unsigned int ans = 0;
         for(int i = 0; i < num.size(); ++i){
-            if(ans > 214748364 || ans == 214748364 && (num[i]+sign) > '7'){
+            if(ans > 214748364 || (ans == 214748364 && (num[i]+sign) > '7')){
                 if(sign == 0) return 2147483647;
                 else return -2147483648;
             }
