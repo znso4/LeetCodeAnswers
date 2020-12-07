@@ -1523,6 +1523,23 @@ public:
         return dp[0];
     }
 
+    // 861. 翻转矩阵后的得分
+    int matrixScore(vector<vector<int>>& A) {
+        int n = A.size();
+        int m = A[0].size();
+        int ans = n << (m-1);
+        int base = 1;
+        for(int j = m-1; j > 0; --j){
+            int cnt = 0;
+            for(int i = 0; i < n; ++i){
+                cnt += (A[i][0] ^ A[i][j]);
+            }
+            ans += max(cnt, n-cnt) * base;
+            base = base << 1;
+        }
+        return ans;
+    }
+
     // 869. 重新排序得到 2 的幂
     bool reorderedPowerOf2(int N) {
         if(N <= 0) return false;
