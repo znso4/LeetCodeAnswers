@@ -1239,6 +1239,27 @@ public:
         return string(result.rbegin(), result.rend());
     }
 
+    // 424. 替换后的最长重复字符
+    int characterReplacement(string s, int k) {
+        if(s.size() == 0) return 0;
+        int l = 0;
+        int r = 0;
+        int ans = 0;
+        size_t maxCount = 0;
+        unordered_map<char, size_t> freq;
+        while(r < s.size()){
+            ++freq[s[r]];
+            maxCount = max(maxCount, freq[s[r]]);
+            ++r;
+            if(r-l-maxCount > k){
+                --freq[s[l]];
+                ++l;
+            }
+            ans = max(ans, r-l);
+        }
+        return ans;
+    }
+
     //445. 两数相加 II(正向链表)
     ListNode* reverseAdd(ListNode* l, ListNode* r) {
         ListNode* reverse_sum=nullptr;
